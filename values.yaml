@@ -1,0 +1,37 @@
+# Default values for rmt.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+db:
+  image:
+    repository: registry.opensuse.org/opensuse/mariadb
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "latest"
+  mysql:
+    database: rmt
+    user: rmt
+    password: rmt
+    root_password: rmt
+  storage:
+    class: local-path
+    size: 100Mi
+
+app:
+  image:
+    repository: registry.opensuse.org/opensuse/rmt-server
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "latest"
+  mysql:
+    host:
+  storage:
+    class: local-path
+    size: 300Mi
+
+app_init:
+  image:
+    repository: registry.opensuse.org/opensuse/mariadb-client
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "latest"
