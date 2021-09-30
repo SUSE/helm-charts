@@ -11,8 +11,8 @@ db:
   mysql:
     database: rmt
     user: rmt
-    password: rmt
-    root_password: rmt
+    password:
+    rootPassword:
   storage:
     class: local-path
     size: 100Mi

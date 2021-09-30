@@ -34,9 +34,15 @@ spec:
         - name: MYSQL_USER
           value: {{ .Values.db.mysql.user }}
         - name: MYSQL_PASSWORD
-          value: {{ .Values.db.mysql.password }}
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Release.Name }}-db"
+              key: password
         - name: MYSQL_ROOT_PASSWORD
-          value: {{ .Values.db.mysql.root_password }}
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Release.Name }}-db"
+              key: rootPassword
         volumeMounts:
         - name: "{{ .Release.Name }}-db-pv"
           mountPath: /var/lib/mysql
@@ -79,7 +85,10 @@ spec:
         - name: MYSQL_USER
           value: {{ .Values.db.mysql.user }}
         - name: MYSQL_PASSWORD
-          value: {{ .Values.db.mysql.password }}
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Release.Name }}-db"
+              key: password
         - name: MYSQL_HOST
           value: {{ .Values.app.mysql.host | default (printf "%s-db-svc" .Release.Name) }}
         volumeMounts:
