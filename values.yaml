@@ -28,6 +28,9 @@ app:
   storage:
     class: local-path
     size: 300Mi
+  scc:
+    username:
+    password:
 
 app_init:
   image:

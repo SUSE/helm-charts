@@ -91,6 +91,16 @@ spec:
               key: password
         - name: MYSQL_HOST
           value: {{ .Values.app.mysql.host | default (printf "%s-db-svc" .Release.Name) }}
+        - name: SCC_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Release.Name }}-app"
+              key: username
+        - name: SCC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Release.Name }}-app"
+              key: password
         volumeMounts:
         - name: "{{ .Release.Name }}-app-pv"
           mountPath: /var/lib/rmt
