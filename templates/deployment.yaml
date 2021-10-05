@@ -70,6 +70,7 @@ spec:
       {{- end }}
       labels:
         {{- include "rmt.selectorLabels" . | nindent 8 }}
+        app: rmt-server
     spec:
       containers:
       - name: "{{ .Chart.Name }}-app"
