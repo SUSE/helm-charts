@@ -18,6 +18,8 @@ metadata:
     app: rmt-server
 spec:
   ports:
-    - port: 4224
+    - protocol: TCP
+      port: {{ .Values.app.service.port }}
+      targetPort: suseconnect
   selector:
     app: rmt-server
