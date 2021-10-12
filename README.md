@@ -12,6 +12,7 @@ Below example also enables ingress with TLS.
 The create-certs.sh can be used to create self-signed certificates and
 add them to Kubernetes as a usable TLS secret.
 
+```
 cat << EOF > myvalues.yaml
 ---
 app:
@@ -30,6 +31,8 @@ ingress:
     hosts:
     - chart-example.local
 EOF
+```
+
 
 #
 
