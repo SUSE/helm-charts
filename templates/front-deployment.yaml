@@ -1,0 +1,68 @@
+---
+{{- $component := "front" -}}
+{{- $image := .Values.front.image -}}
+{{- $initImage := .Values.front.init.image -}}
+{{- $autoscaling := .Values.front.autoscaling -}}
+{{- $replicaCount := .Values.front.replicaCount -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "rmt.fullname" . }}-{{ $component }}
+  labels:
+    {{- include "rmt.labels" . | nindent 4 }}
+    component: {{ $component }}
+spec:
+  {{- if not $autoscaling.enabled }}
+  replicas: {{ $replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "rmt.selectorLabels" . | nindent 6 }}
+      component: {{ $component }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "rmt.selectorLabels" . | nindent 8 }}
+        component: {{ $component }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "rmt.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: "{{ .Chart.Name }}-{{ $component }}"
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        image: "{{ $image.repository }}:{{ $image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ $image.pullPolicy | default "IfNotPresent" }}
+        ports:
+          - name: http
+            containerPort: 80
+            protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /index.html
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /index.html
+            port: http
+        volumeMounts:
+        - mountPath: /etc/nginx/vhosts.d
+          name: {{ include "rmt.fullname" . }}-{{ $component }}
+      volumes:
+      - name: {{ include "rmt.fullname" . }}-{{ $component }}
+        configMap:
+          name: {{ include "rmt.fullname" . }}-{{ $component }}
+      initContainers:
+      - name: "{{ .Chart.Name }}-{{ $component }}-init"
+        image: "{{ $initImage.repository }}:{{ $initImage.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ $initImage.pullPolicy | default "IfNotPresent" }}
+        command: ['sh', '-c', 'until nslookup "{{ include "rmt.fullname" . }}-app"; do echo waiting for rmt-server; sleep 2; done;']

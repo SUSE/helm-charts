@@ -1,0 +1,13 @@
+---
+{{- $component := "app" -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "rmt.fullname" . }}-{{ $component }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.app.storage.class }}
+  resources:
+    requests:
+      storage: {{ .Values.app.storage.size }}

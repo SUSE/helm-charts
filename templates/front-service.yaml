@@ -1,0 +1,18 @@
+---
+{{- $component := "front" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "rmt.fullname" . }}-{{ $component }}
+  labels:
+    {{- include "rmt.labels" . | nindent 4 }}
+    component: {{ $component }}
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: {{ $component }}
+  selector:
+    {{- include "rmt.selectorLabels" . | nindent 4 }}
+    component: {{ $component }}

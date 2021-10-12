@@ -1,0 +1,110 @@
+---
+{{- $component := "app" -}}
+{{- $task := "sync" -}}
+{{- $image := .Values.app.image -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "rmt.fullname" . }}-{{ $component }}-{{ $task }}
+  labels:
+    {{- include "rmt.labels" . | nindent 4 }}
+    component: {{ $component }}
+    task: {{ $task }}
+spec:
+  schedule: "{{ .Values.app.cronjob.sync.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: "{{ .Chart.Name }}-{{ $component }}-{{ $task }}"
+            image: "{{ $image.repository }}:{{ $image.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ $image.pullPolicy | default "IfNotPresent" }}
+            args:
+            - /usr/share/rmt/bin/rmt-cli
+            - {{ $task }}
+            env:
+            - name: MYSQL_HOST
+              value: {{ .Values.app.mysql.host | default (printf "%s-db" (include "rmt.fullname" . )) }}
+            - name: MYSQL_DATABASE
+              value: {{ .Values.app.mysql.database | default .Values.db.mysql.database }}
+            - name: MYSQL_USER
+              value: {{ .Values.app.mysql.user | default .Values.db.mysql.user }}
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "rmt.fullname" . }}-db"
+                  key: password
+            - name: SCC_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "rmt.fullname" . }}-{{ $component }}
+                  key: username
+            - name: SCC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "rmt.fullname" . }}-{{ $component }}
+                  key: password
+            volumeMounts:
+            - name: {{ include "rmt.fullname" . }}-{{ $component }}
+              mountPath: /var/lib/rmt
+          volumes:
+          - name: {{ include "rmt.fullname" . }}-{{ $component }}
+            persistentVolumeClaim:
+              claimName: {{ include "rmt.fullname" . }}-{{ $component }}
+---
+{{- $component := "app" -}}
+{{- $task := "mirror" -}}
+{{- $image := .Values.app.image -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "rmt.fullname" . }}-{{ $component }}-{{ $task }}
+  labels:
+    {{- include "rmt.labels" . | nindent 4 }}
+    component: {{ $component }}
+    task: {{ $task }}
+spec:
+  schedule: "{{ .Values.app.cronjob.mirror.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: "{{ .Chart.Name }}-{{ $component }}-{{ $task }}"
+            image: "{{ $image.repository }}:{{ $image.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ $image.pullPolicy | default "IfNotPresent" }}
+            args:
+            - /usr/share/rmt/bin/rmt-cli
+            - {{ $task }}
+            env:
+            - name: MYSQL_HOST
+              value: {{ .Values.app.mysql.host | default (printf "%s-db" (include "rmt.fullname" . )) }}
+            - name: MYSQL_DATABASE
+              value: {{ .Values.app.mysql.database | default .Values.db.mysql.database }}
+            - name: MYSQL_USER
+              value: {{ .Values.app.mysql.user | default .Values.db.mysql.user }}
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "rmt.fullname" . }}-db"
+                  key: password
+            - name: SCC_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "rmt.fullname" . }}-{{ $component }}
+                  key: username
+            - name: SCC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "rmt.fullname" . }}-{{ $component }}
+                  key: password
+            volumeMounts:
+            - name: {{ include "rmt.fullname" . }}-{{ $component }}
+              mountPath: /var/lib/rmt
+          volumes:
+          - name: {{ include "rmt.fullname" . }}-{{ $component }}
+            persistentVolumeClaim:
+              claimName: {{ include "rmt.fullname" . }}-{{ $component }}
