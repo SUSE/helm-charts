@@ -68,11 +68,21 @@ spec:
             secretKeyRef:
               name: {{ include "rmt.fullname" . }}-{{ $component }}
               key: password
+        - name: SCC_PRODUCT_ENABLE
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "rmt.fullname" . }}-{{ $component }}
+              key: products_enable
+        - name: SCC_PRODUCT_DISABLE
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "rmt.fullname" . }}-{{ $component }}
+              key: products_disable
         volumeMounts:
-        - name: {{ include "rmt.fullname" . }}-{{ $component }}
+        - name: {{ include "rmt.fullname" . }}-{{ $component }}-pv
           mountPath: /var/lib/rmt
       volumes:
-      - name: {{ include "rmt.fullname" . }}-{{ $component }}
+      - name: {{ include "rmt.fullname" . }}-{{ $component }}-pv
         persistentVolumeClaim:
           claimName: {{ include "rmt.fullname" . }}-{{ $component }}
       initContainers:

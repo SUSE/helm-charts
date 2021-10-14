@@ -1,0 +1,15 @@
+---
+{{- $component := "app" -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "rmt.fullname" . }}-{{ $component }}
+data:
+  products_enable: |-
+    {{- range .Values.app.scc.products_enable}}
+    {{ . }}
+    {{- end }}
+  products_disable: |-
+    {{- range .Values.app.scc.products_disable}}
+    {{ . }}
+    {{- end }}
