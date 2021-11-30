@@ -4,10 +4,10 @@
 
 db:
   image:
-    repository: registry.opensuse.org/opensuse/mariadb
+    repository: registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/bci/rmt-mariadb
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "latest"
+    tag: "10.5"
   storage:
     class: local-path
     size: 100Mi
