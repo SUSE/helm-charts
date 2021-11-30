@@ -31,10 +31,10 @@ app:
       # Overrides the image tag whose default is the chart appVersion.
       tag: "latest"
   image:
-    repository: registry.opensuse.org/opensuse/rmt-server
+    repository: registry.suse.de/suse/sle-15-sp3/update/bci/images/suse/rmt-server
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "latest"
+    tag: "2.6.9"
   mysql:
     host:
   storage:
