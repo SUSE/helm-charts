@@ -65,4 +65,4 @@ spec:
       - name: "{{ .Chart.Name }}-{{ $component }}-init"
         image: "{{ $initImage.repository }}:{{ $initImage.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ $initImage.pullPolicy | default "IfNotPresent" }}
-        command: ['sh', '-c', 'until nslookup "{{ include "rmt.fullname" . }}-app"; do echo waiting for rmt-server; sleep 2; done;']
+        command: ['sh', '-c', 'until getent hosts "{{ include "rmt.fullname" . }}-app"; do echo waiting for rmt-server; sleep 2; done;']
