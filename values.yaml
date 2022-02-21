@@ -4,8 +4,8 @@
 
 db:
   image:
-    repository: registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/bci/rmt-mariadb
-    pullPolicy: IfNotPresent
+    repository: registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/suse/rmt-mariadb
+    pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: "10.5"
   storage:
@@ -26,15 +26,15 @@ db:
 app:
   init:
     image:
-      repository: registry.opensuse.org/opensuse/mariadb-client
-      pullPolicy: IfNotPresent
+      repository: registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/suse/rmt-mariadb-client
+      pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "latest"
+      tag: "10.5"
   image:
-    repository: registry.suse.de/suse/sle-15-sp3/update/bci/images/suse/rmt-server
-    pullPolicy: IfNotPresent
+    repository: registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/suse/rmt-server
+    pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "2.6.9"
+    tag: "2.7"
   mysql:
     host:
   storage:
@@ -54,15 +54,15 @@ app:
 front:
   init:
     image:
-      repository: registry.opensuse.org/opensuse/nginx
-      pullPolicy: IfNotPresent
+      repository: registry.suse.com/bci/bci-micro
+      pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "latest"
+      tag: "15.3"
   image:
-    repository: registry.opensuse.org/opensuse/nginx
-    pullPolicy: IfNotPresent
+    repository: registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/suse/rmt-nginx
+    pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "latest"
+    tag: "1.19"
   service:
     port: 80
 
