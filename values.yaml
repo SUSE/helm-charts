@@ -4,17 +4,24 @@
 
 db:
   image:
+    # -- db image
     repository: registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/suse/rmt-mariadb
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
+    # -- db image tag
     tag: "10.5"
   storage:
     class: local-path
+    # -- db storage volume space requirements
     size: 100Mi
   mysql:
+    # -- db name
     database: rmt
+    # -- db user
     user: rmt
+    # -- db password (self generated if not provided)
     password:
+    # -- db root password (self generated if not provided)
     rootPassword:
   replicaCount: 1
   autoscaling:
@@ -31,24 +38,33 @@ app:
       # Overrides the image tag whose default is the chart appVersion.
       tag: "10.5"
   image:
+    # -- RMT server image
     repository: registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/suse/rmt-server
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
+    # -- RMT server image tag
     tag: "2.7"
   mysql:
+    # -- mysql host to connect to (default target is db container)
     host:
   storage:
     class: local-path
+    # -- RMT server storage volume requirements. This can vary greatly depending on the number of modules to mirror.
     size: 300Mi
   scc:
+    # -- SCC username
     username:
+    # -- SCC password
     password:
   service:
+    # -- RMT server port
     port: 4224
   cronjob:
     sync:
+      # -- schedule for running rmt-cli sync command (syncing to SUSE db)
       schedule: "* 1 * * *"
     mirror:
+      # -- schedule for running rmt-cli mirror command (actual package mirroring)
       schedule: "30 2 * * *"
 
 front:
@@ -59,11 +75,14 @@ front:
       # Overrides the image tag whose default is the chart appVersion.
       tag: "15.3"
   image:
+    # -- Nginx image
     repository: registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/suse/rmt-nginx
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
+    # -- Nginx image tag
     tag: "1.19"
   service:
+    # -- Nginx service port
     port: 80
 
 
@@ -73,6 +92,7 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
+    # -- DNS name at which the RMT service will be accessible from clients
     - host: chart-example.local
       paths:
         - path: "/"
@@ -80,6 +100,7 @@ ingress:
   tls:
   - secretName: rmt-cert
     hosts:
+    # -- DNS name at which the RMT service will be accessible from clients
     - chart-example.local
 
 serviceAccount:
