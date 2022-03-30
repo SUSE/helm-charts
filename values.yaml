@@ -5,11 +5,11 @@
 db:
   image:
     # -- db image
-    repository: registry.suse.de/suse/containers/sle-server/15/containers/suse/rmt-mariadb
+    repository: registry.suse.de/suse/sle-15-sp4/update/bci/containerfile/suse/rmt-mariadb
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     # -- db image tag
-    tag: "10.5"
+    tag: "10.6"
   storage:
     class: local-path
     # -- db storage volume space requirements
@@ -33,13 +33,13 @@ db:
 app:
   init:
     image:
-      repository: registry.suse.de/suse/containers/sle-server/15/containers/suse/rmt-mariadb-client
+      repository: registry.suse.de/suse/sle-15-sp4/update/bci/containerfile/suse/rmt-mariadb-client
       pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "10.5"
+      tag: "10.6"
   image:
     # -- RMT server image
-    repository: registry.suse.de/suse/containers/sle-server/15/containers/suse/rmt-server
+    repository: registry.suse.de/suse/sle-15-sp4/update/bci/containerfile/suse/rmt-server
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     # -- RMT server image tag
@@ -70,17 +70,17 @@ app:
 front:
   init:
     image:
-      repository: registry.suse.com/bci/bci-micro
+      repository: registry.suse.de/suse/sle-15-sp4/update/bci/images/bci/bci-micro
       pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "15.3"
+      tag: "15.4"
   image:
     # -- Nginx image
-    repository: registry.suse.de/suse/containers/sle-server/15/containers/suse/rmt-nginx
+    repository: registry.suse.de/suse/sle-15-sp4/update/bci/containerfile/suse/rmt-nginx
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     # -- Nginx image tag
-    tag: "1.19"
+    tag: "1.21"
   service:
     # -- Nginx service port
     port: 80
