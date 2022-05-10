@@ -24,10 +24,6 @@ data:
             autoindex off;
         }
 
-        location /repo {
-            autoindex on;
-        }
-
         location = /repo/repoindex.xml {
             # RMT serves /repo/repoindex.xml over HTTP and HTTPS by default.
             # If want to block it over HTTP, you can comment out the following try_files line and uncomment the return
