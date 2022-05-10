@@ -21,8 +21,11 @@ spec:
       component: {{ $component }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+
+    metadata:
       annotations:
+        checksum/config: {{ include (printf "%s/%s-configmap.yaml" $.Template.BasePath $component) . | sha256sum }}
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
