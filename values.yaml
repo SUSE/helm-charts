@@ -5,11 +5,11 @@
 db:
   image:
     # -- db image
-    repository: registry.suse.de/suse/sle-15-sp4/update/bci/containerfile/suse/rmt-mariadb
+    repository: registry.suse.com/suse/rmt-mariadb
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     # -- db image tag
-    tag: "10.6"
+    tag: "10.5"
   storage:
     class: local-path
     # -- db storage volume space requirements
@@ -33,17 +33,17 @@ db:
 app:
   init:
     image:
-      repository: registry.suse.de/suse/sle-15-sp4/update/bci/containerfile/suse/rmt-mariadb-client
+      repository: registry.suse.com/suse/rmt-mariadb-client
       pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "10.6"
+      tag: "10.5"
   image:
     # -- RMT server image
-    repository: registry.suse.de/suse/sle-15-sp4/update/bci/containerfile/suse/rmt-server
+    repository: registry.suse.com/suse/rmt-server
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     # -- RMT server image tag
-    tag: "2.7"
+    tag: "2.8"
   mysql:
     # -- mysql host to connect to (default target is db container)
     host:
@@ -70,17 +70,17 @@ app:
 front:
   init:
     image:
-      repository: registry.suse.de/suse/sle-15-sp4/update/bci/images/bci/bci-micro
+      repository: registry.suse.com/bci/bci-micro
       pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "15.4"
+      tag: "15.3"
   image:
     # -- Nginx image
-    repository: registry.suse.de/suse/sle-15-sp4/update/bci/containerfile/suse/rmt-nginx
+    repository: registry.suse.com/suse/rmt-nginx
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     # -- Nginx image tag
-    tag: "1.21"
+    tag: "1.19"
   service:
     # -- Nginx service port
     port: 80
