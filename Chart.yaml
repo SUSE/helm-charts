@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-#!BuildTag: suse/rmt-helm:0.2.6
+#!BuildTag: suse/rmt-helm:1.0.0
 apiVersion: v2
 name: rmt
 description: Helm chart to deploy and RMT server
