@@ -1,0 +1,325 @@
+questions:
+
+# SCC Configuration
+
+- variable: app.scc.password
+  default: 
+  description: "SCC Password"
+  label: "SCC Password"
+  required: true
+  type: string
+  group: "SUSE Customer Center"
+- variable: app.scc.username
+  default: 
+  description: "SCC Username"
+  label: "SCC Username"
+  required: true
+  type: string
+  group: "SUSE Customer Center"
+
+#RMT Configuration
+
+- variable: app.service.port
+  default: 4224
+  description: "Default RMT pod server port"
+  label: "RMT Server port"
+  required: false
+  type: int
+  group: "RMT"
+- variable: app.storage.class
+  default: 
+  description: "Storage Class"
+  label: "Storage Class"
+  required: false
+  type: storageclass
+  group: "RMT"
+- variable: app.storage.size
+  default: "30Gi"
+  description: "RMT Storage Volume - This will hold all Packages"
+  label: "RMT Server Storage Volume"
+  required: false
+  type: string
+  group: "RMT"
+
+# Database AutoScaling
+
+- variable: db.autoscaling.enabled
+  default: false
+  description: "DB Autoscaling"
+  label: "DB Autoscaling"
+  required: false
+  type: boolean
+  group: "Database"
+  subquestions:
+  - variable: db.autoscaling.maxReplicas
+    default: "10"
+    description: "DB Max Replicas"
+    label: "DB Max Replicas"
+    required: false
+    type: int
+    show_if: "db.autoscaling.enabled=true"
+  - variable: db.autoscaling.minReplicas
+    default: "1"
+    description: "DB Min Replicas"
+    label: "DB Min Replicas"
+    required: false
+    type: int
+    show_if: "db.autoscaling.enabled=true"
+  - variable: db.autoscaling.targetCPUUtilizationPercentage
+    default: "80"
+    description: "DB Autoscaling CPU Threshold"
+    label: "DB Autoscaling CPU Threshold"
+    required: false
+    type: int
+    show_if: "db.autoscaling.enabled=true"
+
+# Database Config
+
+- variable: app.mysql.host
+  default: 
+  description: "Custom mysql host to connect to (default target is db container)"
+  label: "mysql host to connect to"
+  required: false
+  type: string
+  group: "Database"
+- variable: db.mysql.database
+  default: "rmt"
+  description: "mysql database"
+  label: "mysql database"
+  required: false
+  type: string
+  group: "Database"
+- variable: db.mysql.password
+  default: 
+  description: "mysql password"
+  label: "mysql password"
+  required: false
+  type: string
+  group: "Database"
+- variable: db.mysql.rootPassword
+  default: 
+  description: "mysql root password"
+  label: "mysql root password"
+  required: false
+  type: string
+  group: "Database"
+- variable: db.mysql.user
+  default: "rmt"
+  description: "DB Username"
+  label: "DB Username"
+  required: false
+  type: string
+  group: "Database"
+- variable: db.replicaCount
+  default: "1"
+  description: "DB Replica Count"
+  label: "DB Replica Count"
+  required: false
+  type: int
+  group: "Database"
+- variable: db.storage.class
+  default: 
+  description: "DB StorageClass"
+  label: "DB StorageClass"
+  required: false
+  type: storageclass
+  group: "Database"
+- variable: db.storage.size
+  default: "10Gi"
+  description: "DB Storage Volume"
+  label: "DB Storage Volume"
+  required: false
+  type: string
+  group: "Database"
+
+# Ingress Configuration
+
+- variable: ingress.enabled
+  default: false
+  description: "Ingress Enabled"
+  label: "Ingress Enabled"
+  required: true
+  type: boolean
+  show_subquestion_if: true
+  group: "Ingress"
+  subquestions:
+  - variable: ingress.hosts.0.host
+    default: "chart-example.local"
+    description: "DNS name at which the RMT service will be accessible from clients"
+    label: "Ingress Hosts"
+    required: true
+    type: hostname
+  - variable: ingress.hosts.0.paths.0.path
+    default: "/"
+    description: "DNS path at which the RMT service will be accessible from clients"
+    label: "Ingress Path"
+    required: true
+    type: string    
+  - variable: front.service.port
+    default: "80"
+    description: "Nginx Service Port"
+    label: "Nginx Service Port"
+    required: false
+    type: string
+  - variable: ingress.annotations
+    default: ""
+    description: "Ingress Annotations"
+    label: "Ingress Annotations"
+    required: false
+    type: string
+  - variable: ingress.tls.0.hosts
+    default: "chart-example.local"
+    description: "DNS name at which the RMT service will be accessible from clients"
+    label: "TLS Cert Valid Ingress Hosts"
+    required: true
+    type: string
+  - variable: ingress.tls.0.secretName
+    default: "rmt-cert"
+    description: "RMT Certificate"
+    label: "TLS Ingress Certificate"
+    required: false
+    type: string
+
+
+# Misc Configuration
+
+- variable: app.cronjob.mirror.schedule
+  default: "30 2 * * *"
+  description: "Schedule for running rmt-cli mirror command (actual package mirroring)"
+  label: "Cron Mirror Scheduling"
+  required: false
+  type: string
+  group: "Misc"
+- variable: app.cronjob.sync.schedule
+  default: "30 2 * * *"
+  description: "Schedule for running rmt-cli sync command (syncing to SUSE db)"
+  label: "Cron rmt-cli Sync Scheduling"
+  required: false
+  type: string
+  group: "Misc"
+- variable: serviceAccount.create
+  default: true
+  description: "Create Service Account"
+  label: "Create Service Account"
+  required: false
+  type: boolean
+  group: "Misc"
+- variable: serviceAccount.name
+  default: ""
+  description: "Service Account Name"
+  label: "Service Account Name"
+  required: false
+  type: string
+  group: "Misc"
+- variable: serviceAccount.annotations
+  default: ""
+  description: "Service Account Annotations"
+  label: "Service Account Annotations"
+  required: false
+  type: string
+  group: "Misc"
+- variable: app.image.pullPolicy
+  default: "Always"
+  description: "Image Pull Policy"
+  label: "Image Pull Policy"
+  required: false
+  type: string
+  group: "Misc"
+- variable: app.image.repository
+  default: "registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/suse/rmt-server"
+  description: "RMT Server Image"
+  label: "RMT Server Image"
+  required: false
+  type: string
+  group: "Misc"
+- variable: app.image.tag
+  default: "2.7"
+  description: "RMT Server Image Tag"
+  label: "RMT Server Image Tag"
+  required: false
+  type: string
+  group: "Misc"
+- variable: app.init.image.pullPolicy
+  default: "Always"
+  description: "Init Image Pull Policy"
+  label: "Init Image Pull Policy"
+  required: false
+  type: string
+  group: "Misc"
+- variable: app.init.image.repository
+  default: "registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/suse/rmt-mariadb-client"
+  description: "Init Image Pull Repository"
+  label: "Init Image Pull Policy Repository"
+  required: false
+  type: string
+  group: "Misc"
+- variable: app.init.image.tag
+  default: "10.6"
+  description: "Init Image Pull Tag"
+  label: "Init Image Pull Policy Tag"
+  required: false
+  type: string
+  group: "Misc"
+- variable: db.image.pullPolicy
+  default: "Always"
+  description: "Image Pull Policy"
+  label: "Image Pull Policy"
+  required: false
+  type: string
+  group: "Misc"
+- variable: db.image.repository
+  default: "registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/suse/rmt-mariadb"
+  description: "Image"
+  label: "Image"
+  required: false
+  type: string
+  group: "Misc"
+- variable: db.image.tag
+  default: "10.6"
+  description: "Image Tag"
+  label: "Image Tag"
+  required: false
+  type: string
+  group: "Misc"
+- variable: front.image.pullPolicy
+  default: "Always"
+  description: "Front Image Pull Policy"
+  label: "Front Image Pull Policy"
+  required: false
+  type: string
+  group: "Misc"
+- variable: front.image.repository
+  default: "registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/suse/rmt-nginx"
+  description: "RMT Nginx Image"
+  label: "RMT Nginx Image"
+  required: false
+  type: string
+  group: "Misc"
+- variable: front.image.tag
+  default: "1.21"
+  description: "Front RMT Nginx Tag"
+  label: "Front RMT Nginx Tag"
+  required: false
+  type: string
+  group: "Misc"
+- variable: front.init.image.pullPolicy
+  default: "Always"
+  description: "Init Pull Policy"
+  label: "Init Pull Policy"
+  required: false
+  type: string
+  group: "Misc"
+- variable: front.init.image.repository
+  default: "registry.suse.com/bci/bci-micro"
+  description: "Front Init Image"
+  label: "Front Init Image"
+  required: false
+  type: string
+  group: "Misc"
+- variable: front.init.image.tag
+  default: "15.4"
+  description: "RMT Image Tag"
+  label: "RMT Image Tag"
+  required: false
+  type: string
+  group: "Misc"
