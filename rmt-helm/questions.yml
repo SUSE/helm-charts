@@ -4,14 +4,14 @@ questions:
 
 - variable: app.scc.password
   default: 
-  description: "SCC Proxy Password"
+  description: "SCC Proxy Mirroring Password - You can get the mirroring password from scc.suse.com"
   label: "SCC Password"
   required: true
   type: string
   group: "SUSE Customer Center"
 - variable: app.scc.username
   default: 
-  description: "SCC Proxy Username"
+  description: "SCC Proxy Mirroring Username - You can get the mirroring username from scc.suse.com"
   label: "SCC Username"
   required: true
   type: string
@@ -30,7 +30,7 @@ questions:
   default: 
   description: "Storage Class"
   label: "Storage Class"
-  required: true
+  required: false
   type: storageclass
   group: "RMT"
 - variable: app.storage.size
@@ -40,6 +40,20 @@ questions:
   required: false
   type: string
   group: "RMT"
+- variable: app.scc.products_enable
+  default: []
+  description: "List of products to enable for mirroring"
+  label: "SCC mirroring enabled products"
+  required: true
+  type: list
+  group: "Product List"
+- variable: app.scc.products_disable
+  default: []
+  description: "List of products to disabled for mirroring"
+  label: "SCC mirroring disabled products"
+  required: true
+  type: string
+  group: "Product List"
 
 # Database AutoScaling
 
