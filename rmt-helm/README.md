@@ -31,10 +31,11 @@ Having a properly configured webserver out of the box allows you to target your 
 # Custom mandatory values
 
 Some values of this chart do not have any sensible defaults:
-- SCC credentials
+- SCC mirroring credentials, please have a look here for [more information](https://documentation.suse.com/sles/15-SP4/html/SLES-all/cha-rmt-mirroring.html#sec-rmt-mirroring-credentials)
 - list of products to mirror
 - list of products to not mirror
 - DNS name the RMT server should be reachable at
+- Configured [storage](https://kubernetes.io/docs/concepts/storage/)
 
 You should fill a custom values file before deploying the chart.
 
@@ -46,6 +47,8 @@ add them to Kubernetes as a usable TLS secret.
 cat << EOF > myvalues.yaml
 ---
 app:
+  storage:
+    class: my-storage-class
   scc:
     username: UXXXXXXX
     password: PASSXXXX
@@ -66,6 +69,9 @@ ingress:
   - secretName: rmt-cert
     hosts:
     - chart-example.local
+db:
+  storage:
+    class: my-storage-class
 EOF
 ```
 

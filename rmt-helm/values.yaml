@@ -11,7 +11,7 @@ db:
     # -- db image tag
     tag: "10.5"
   storage:
-    class: local-path
+    class:
     # -- db storage volume space requirements
     size: 100Mi
   mysql:
@@ -48,7 +48,7 @@ app:
     # -- mysql host to connect to (default target is db container)
     host:
   storage:
-    class: local-path
+    class:
     # -- RMT server storage volume requirements. This can vary greatly depending on the number of modules to mirror.
     size: 300Mi
   scc:

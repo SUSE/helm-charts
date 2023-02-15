@@ -4,14 +4,14 @@ questions:
 
 - variable: app.scc.password
   default: 
-  description: "SCC Password"
+  description: "SCC Proxy Mirroring Password - You can get the mirroring password from scc.suse.com"
   label: "SCC Password"
   required: true
   type: string
   group: "SUSE Customer Center"
 - variable: app.scc.username
   default: 
-  description: "SCC Username"
+  description: "SCC Proxy Mirroring Username - You can get the mirroring username from scc.suse.com"
   label: "SCC Username"
   required: true
   type: string
@@ -40,6 +40,20 @@ questions:
   required: false
   type: string
   group: "RMT"
+- variable: app.scc.products_enable
+  default: []
+  description: "List of products to enable for mirroring"
+  label: "SCC mirroring enabled products"
+  required: true
+  type: list
+  group: "Product List"
+- variable: app.scc.products_disable
+  default: []
+  description: "List of products to disabled for mirroring"
+  label: "SCC mirroring disabled products"
+  required: true
+  type: string
+  group: "Product List"
 
 # Database AutoScaling
 
@@ -121,7 +135,7 @@ questions:
   default: 
   description: "DB StorageClass"
   label: "DB StorageClass"
-  required: false
+  required: true
   type: storageclass
   group: "Database"
 - variable: db.storage.size
@@ -226,14 +240,14 @@ questions:
   type: string
   group: "Misc"
 - variable: app.image.repository
-  default: "registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/suse/rmt-server"
+  default: "registry.suse.com/suse/rmt-server"
   description: "RMT Server Image"
   label: "RMT Server Image"
   required: false
   type: string
   group: "Misc"
 - variable: app.image.tag
-  default: "2.7"
+  default: ""
   description: "RMT Server Image Tag"
   label: "RMT Server Image Tag"
   required: false
@@ -247,7 +261,7 @@ questions:
   type: string
   group: "Misc"
 - variable: app.init.image.repository
-  default: "registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/suse/rmt-mariadb-client"
+  default: "registry.suse.com/suse/rmt-mariadb-client"
   description: "Init Image Pull Repository"
   label: "Init Image Pull Policy Repository"
   required: false
@@ -268,14 +282,14 @@ questions:
   type: string
   group: "Misc"
 - variable: db.image.repository
-  default: "registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/suse/rmt-mariadb"
+  default: "registry.suse.com/suse/rmt-mariadb"
   description: "Image"
   label: "Image"
   required: false
   type: string
   group: "Misc"
 - variable: db.image.tag
-  default: "10.6"
+  default: "10.5"
   description: "Image Tag"
   label: "Image Tag"
   required: false
@@ -289,7 +303,7 @@ questions:
   type: string
   group: "Misc"
 - variable: front.image.repository
-  default: "registry.suse.de/suse/sle-15-sp3/update/bci/containerfile/suse/rmt-nginx"
+  default: "registry.suse.com/suse/rmt-nginx"
   description: "RMT Nginx Image"
   label: "RMT Nginx Image"
   required: false
