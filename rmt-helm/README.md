@@ -1,34 +1,37 @@
 # Purpose
 
-This chart is used to deploy and RMT server on top of a kubernetes cluster.
-It has been developped on a k3s based cluster but should work on any of them.
+This chart deploys a SUSE Repository Mirroring Tool (RMT) server on Kubernetes.
+It is tested on K3s but should work on any Kubernetes distribution.
 
-# Overview
+## Overview
 
-Every component of the stack is defined in its own container, and Helm is used to ease deployment on top of Kubernetes.
+Every component of the stack is deployed in a dedicated container via a
+Helm Chart to ease deployment on top of Kubernetes.
 
-## RMT server
+### Repository Mirroring Tool (SUSE RMT) server
 
-A containerized version of the rmt application, with the ability to pass its configuration via Helm values.
-Storage is done on a volume, thus you need to adapt its size depending on the number of repositories you need to mirror.
+A containerized version of the SUSE RMT application, with the ability to pass its configuration via Helm values.  Persistent storage is on a Persistent Volume, thus you need to adapt its size depending on the number of repositories you need to mirror.
 
-## MariadDB
+### MariadDB
 
 The database backend for RMT.
-RMT does create the database/tables at startup if needed so no specific post-installation task is required for it to be usable.
-Passwords are self-generated unless explicitely specified in the values file.
+RMT does create the database/tables at startup if needed so no specific
+post-installation task is required for it to be usable.  Passwords are
+self-generated unless explicitly specified in the values file.
 
-## Nginx
+### Nginx
 
-The web server with proper configuration for RMT routes.
-Having a properly configured webserver out of the box allows you to target your ingress traffic (for RMT) to it directly. You don't have to configure ingress for RMT specific paths handling, as Nginx is configured to do so.
+The web server with proper configuration for RMT routes.  Having a properly
+configured web server out of the box allows you to target your ingress traffic
+(for RMT) to it directly. You don't have to configure ingress for RMT specific
+paths handling, as NGINX is configured to do so.
 
-# Prerequisites
+## Prerequisites
 
 - a running kubernetes cluster
 - helm (v3) command configured to interact with this cluster
 
-# Custom mandatory values
+## Custom mandatory values
 
 Some values of this chart do not have any sensible defaults:
 - SCC mirroring credentials, please have a look here for [more information](https://documentation.suse.com/sles/15-SP4/html/SLES-all/cha-rmt-mirroring.html#sec-rmt-mirroring-credentials)
@@ -75,9 +78,6 @@ db:
 EOF
 ```
 
-
-#
-
-# Deploying
+## Deploying
 
 `helm install rmt ./helm -f myvalues.yaml`
