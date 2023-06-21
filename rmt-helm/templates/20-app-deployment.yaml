@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (printf "%s/%s-configmap.yaml" $.Template.BasePath $component) . | sha256sum }}
+        checksum/config: {{ include (printf "%s/20-%s-configmap.yaml" $.Template.BasePath $component) . | sha256sum }}
       {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
