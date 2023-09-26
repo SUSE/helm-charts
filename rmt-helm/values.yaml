@@ -9,7 +9,7 @@ db:
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     # -- db image tag
-    tag: "10.5"
+    tag: "10.6"
   storage:
     class:
     # -- db storage volume space requirements
@@ -36,14 +36,14 @@ app:
       repository: registry.suse.com/suse/rmt-mariadb-client
       pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "10.5"
+      tag: "10.6"
   image:
     # -- RMT server image
     repository: registry.suse.com/suse/rmt-server
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     # -- RMT server image tag
-    tag: "2.8"
+    tag: "2.14"
   mysql:
     # -- mysql host to connect to (default target is db container)
     host:
@@ -73,14 +73,14 @@ front:
       repository: registry.suse.com/bci/bci-micro
       pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "15.3"
+      tag: "15.5"
   image:
     # -- Nginx image
-    repository: registry.suse.com/suse/rmt-nginx
+    repository: registry.suse.com/suse/nginx
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     # -- Nginx image tag
-    tag: "1.19"
+    tag: "1.21"
   service:
     # -- Nginx service port
     port: 80
