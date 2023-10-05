@@ -197,6 +197,24 @@ questions:
 
 # Misc Configuration
 
+- variable: app.env.http_proxy
+  default: ""
+  description: "HTTP proxy server address for pod"
+  label: "HTTP Proxy"
+  required: false
+  group: "Misc"
+- variable: app.env.https_proxy
+  default: ""
+  description: "HTTPS proxy server address for pod"
+  label: "HTTPS Proxy"
+  required: false
+  group: "Misc"
+- variable: app.env.no_proxy
+  default: ""
+  description: "Comma seperated list of addresses not to proxy"
+  label: "NO HTTP Proxy"
+  required: false
+  group: "Misc"
 - variable: app.cronjob.mirror.schedule
   default: "30 2 * * *"
   description: "Schedule for running rmt-cli mirror command (actual package mirroring)"

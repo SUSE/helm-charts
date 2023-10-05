@@ -79,6 +79,20 @@ spec:
             configMapKeyRef:
               name: {{ include "rmt.fullname" . }}-{{ $component }}
               key: products_disable
+        {{- with .Values.app.env }}
+          {{- if .http_proxy }}
+        - name: http_proxy
+          value: {{ .http_proxy | quote }}
+          {{- end}}
+          {{- if .https_proxy }}
+        - name: https_proxy
+          value: {{ .https_proxy | quote }}
+          {{- end }}
+          {{- if .no_proxy }}
+        - name: no_proxy
+          value: {{ .no_proxy | quote }}
+          {{- end }}
+        {{- end }}
         volumeMounts:
         - name: {{ include "rmt.fullname" . }}-{{ $component }}-pv
           mountPath: /var/lib/rmt

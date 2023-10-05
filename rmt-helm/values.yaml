@@ -59,6 +59,11 @@ app:
   service:
     # -- RMT server port
     port: 4224
+  env:
+    # -- http proxy variables
+    http_proxy: ""
+    https_proxy: ""
+    no_proxy: ""
   cronjob:
     sync:
       # -- schedule for running rmt-cli sync command (syncing to SUSE db)
