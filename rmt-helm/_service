@@ -1,0 +1,4 @@
+<services>
+  <service name="build-recipe-helm" mode="default" />
+  </service>
+</services>

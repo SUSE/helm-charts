@@ -1,0 +1,7 @@
+rebuild_main:
+  steps:
+    - rebuild_package:
+        project: home:bleon
+        package: rmt-helm
+  filters:
+    event: pull_request
