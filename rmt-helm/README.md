@@ -12,14 +12,14 @@ Helm Chart to ease deployment on top of Kubernetes.
 
 A containerized version of the SUSE RMT application, with the ability to pass its configuration via Helm values.  Persistent storage is on a Persistent Volume, thus you need to adapt its size depending on the number of repositories you need to mirror.
 
-### MariadDB
+### MariaDB
 
 The database backend for RMT.
 RMT does create the database/tables at startup if needed so no specific
 post-installation task is required for it to be usable.  Passwords are
 self-generated unless explicitly specified in the values file.
 
-### Nginx
+### NGINX
 
 The web server with proper configuration for RMT routes.  Having a properly
 configured web server out of the box allows you to target your ingress traffic
