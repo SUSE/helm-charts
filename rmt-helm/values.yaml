@@ -5,7 +5,7 @@
 db:
   image:
     # -- db image
-    repository: registry.suse.com/suse/rmt-mariadb
+    repository: registry.suse.com/suse/mariadb
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     # -- db image tag
@@ -33,7 +33,7 @@ db:
 app:
   init:
     image:
-      repository: registry.suse.com/suse/rmt-mariadb-client
+      repository: registry.suse.com/suse/mariadb-client
       pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
       tag: "10.6"
