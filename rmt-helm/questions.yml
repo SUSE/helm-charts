@@ -279,7 +279,7 @@ questions:
   type: string
   group: "Misc"
 - variable: app.init.image.repository
-  default: "registry.suse.com/suse/rmt-mariadb-client"
+  default: "registry.suse.com/suse/mariadb-client"
   description: "Init Image Pull Repository"
   label: "Init Image Pull Policy Repository"
   required: false
@@ -300,7 +300,7 @@ questions:
   type: string
   group: "Misc"
 - variable: db.image.repository
-  default: "registry.suse.com/suse/rmt-mariadb"
+  default: "registry.suse.com/suse/mariadb"
   description: "Image"
   label: "Image"
   required: false
