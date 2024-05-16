@@ -5,7 +5,7 @@ It is tested on K3s but should work on any Kubernetes distribution.
 
 ## Overview
 
-To deployment on top of Kubernetes easier, each component of the stack is deployed in a dedicated container via a
+To deploy SUSE RMT on top of Kubernetes, each component of the stack is deployed in a dedicated container via a
 Helm Chart.
 
 ### Repository Mirroring Tool (SUSE RMT) server
@@ -29,18 +29,18 @@ paths handling, as NGINX is configured to do that.
 ## Prerequisites
 
 - a running Kubernetes cluster
-- helm (v3) command configured to interact with the cluster
+- helm command configured to interact with the cluster
 
 ## Custom mandatory values
 
-Certain values of the chart do not have any sensible defaults:
+Certain values of the chart do not have any defaults:
 - SCC mirroring credentials (refer to [more information](https://documentation.suse.com/sles/15-SP4/html/SLES-all/cha-rmt-mirroring.html#sec-rmt-mirroring-credentials) for more information)
 - list of products to mirror
-- list of products not t mirror
-- DNS name of the RMT server
+- list of products not to mirror
+- DNS name used to reach the RMT server
 - configured [storage](https://kubernetes.io/docs/concepts/storage/)
 
-You must fill a custom values file before deploying the chart.
+Before deploying the chart, you must fill a custom values file.
 
 The following example enables ingress with TLS.
 The create-certs.sh can be used to create self-signed certificates and
