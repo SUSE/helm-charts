@@ -4,6 +4,7 @@
 {{- $initImage := .Values.app.init.image -}}
 {{- $autoscaling := .Values.app.autoscaling -}}
 {{- $replicaCount := .Values.app.replicaCount -}}
+{{- $sccSync := .Values.app.scc -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -59,6 +60,10 @@ spec:
             secretKeyRef:
               name: "{{ include "rmt.fullname" . }}-db"
               key: password
+        {{- if not $sccSync.enabled }}
+        - name: SCC_SYNC
+          value: {{ $sccSync.enabled | toString }}
+        {{- end }}
         - name: SCC_USERNAME
           valueFrom:
             secretKeyRef:
@@ -96,10 +101,19 @@ spec:
         volumeMounts:
         - name: {{ include "rmt.fullname" . }}-{{ $component }}-pv
           mountPath: /var/lib/rmt
+        {{- if not $sccSync.enabled }}
+        - name: {{ include "rmt.fullname" . }}-{{ $component }}-entrypoint
+          mountPath: /usr/local/bin
+        {{- end }}
       volumes:
       - name: {{ include "rmt.fullname" . }}-{{ $component }}-pv
         persistentVolumeClaim:
           claimName: {{ include "rmt.fullname" . }}-{{ $component }}
+      {{- if not $sccSync.enabled }}
+      - name: {{ include "rmt.fullname" . }}-{{ $component }}-entrypoint
+        configMap:
+          name: {{ include "rmt.fullname" . }}-{{ $component }}-config
+      {{- end }}
       initContainers:
       - name: "{{ .Chart.Name }}-{{ $component }}-init"
         image: "{{ $initImage.repository }}:{{ $initImage.tag | default .Chart.AppVersion }}"

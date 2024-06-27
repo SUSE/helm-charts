@@ -52,6 +52,8 @@ app:
     # -- RMT server storage volume requirements. This can vary greatly depending on the number of modules to mirror.
     size: 300Mi
   scc:
+    # -- Enable or Disable the sync with SCC
+    enabled: true
     # -- SCC username
     username:
     # -- SCC password
