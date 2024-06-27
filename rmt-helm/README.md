@@ -6,7 +6,7 @@ It is tested on K3s but should work on any Kubernetes distribution.
 ## Overview
 
 To deploy SUSE RMT on top of Kubernetes, each component of the stack is deployed in a dedicated container via a
-Helm chart available on the [helm-charts GitHub repository](https://github.com/SUSE/helm-charts/tree/main/rmt-helm).
+Helm Chart.
 
 ### Repository Mirroring Tool (SUSE RMT) server
 
@@ -34,7 +34,7 @@ paths handling, as NGINX is configured to do that.
 ## Custom mandatory values
 
 Certain values of the chart do not have any defaults:
-- SCC mirroring credentials (refer to [more information](https://documentation.suse.com/sles/html/SLES-all/cha-rmt-mirroring.html#sec-rmt-mirroring-credentials) for more information)
+- SCC mirroring credentials (refer to [more information](https://documentation.suse.com/sles/15-SP4/html/SLES-all/cha-rmt-mirroring.html#sec-rmt-mirroring-credentials) for more information)
 - list of products to mirror
 - list of products not to mirror
 - DNS name used to reach the RMT server
@@ -42,10 +42,9 @@ Certain values of the chart do not have any defaults:
 
 Before deploying the chart, you must fill a custom values file.
 
-The following example enables ingress with TLS. The create-certs.sh script
-(available in the [helm-charts GitHub repository](https://github.com/SUSE/helm-charts/tree/main/rmt-helm)) can be used
-to create self-signed certificates and add them to Kubernetes as a usable TLS
-secret.
+The following example enables ingress with TLS.
+The create-certs.sh can be used to create self-signed certificates and
+add them to Kubernetes as a usable TLS secret.
 
 ```
 cat << EOF > myvalues.yaml
@@ -82,7 +81,3 @@ EOF
 ## Deploying
 
 `helm install rmt ./helm -f myvalues.yaml`
-
-## Further info
-
-For more information on using RMT, refer to the [RMT Guide](https://documentation.suse.com/sles/15-SP6/html/SLES-all/book-rmt.html)
