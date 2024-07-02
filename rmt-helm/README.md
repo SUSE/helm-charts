@@ -79,6 +79,19 @@ db:
 EOF
 ```
 
+The required values in the custom value file are as follows:
+
+- `app.scc.password` SUSE Customer Center proxy password. The password string must be in quotes. If the quote character `"` is part of the string, it has to be escaped with `\`.
+- `app.scc.username` SUSE Customer Center proxy user name. The user name string must be quotes. If the quote character `"` is part of the string, it has to be escaped with `\`.
+- `app.scc.products_enable` List of products to enable for mirroring.
+- `app.scc.products_disable` list of products to exclude from mirroring.
+- `app.storage.class` Kubernetes storageclass.
+- `db.storage.class` Kubernetes storageclass.
+- `ingress.enabled` Enable or disable ingress.
+- `ingress.hosts[0]` DNS name at which the RMT service is be accessible from clients.
+- `ingress.tls[0].hosts[0]` DNS name at which the RMT service is be accessible from clients.
+- `ingress.tls[0].secretName` TLS ingress certificate.
+
 ## Deploying
 
 `helm install rmt ./helm -f myvalues.yaml`
