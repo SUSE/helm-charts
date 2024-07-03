@@ -5,9 +5,8 @@ It is tested on K3s but should work on any Kubernetes distribution.
 
 ## Overview
 
-To deploy SUSE RMT on top of Kubernetes, each component of the stack is deployed in a dedicated container via a
-Helm chart available on the [helm-charts GitHub repository](https://github.com/SUSE/helm-charts/tree/main/rmt-helm).
-
+To deploy SUSE RMT on top of Kubernetes, each component of the stack is deployed in a dedicated container using a
+Helm chart.
 ### Repository Mirroring Tool (SUSE RMT) server
 
 A containerized version of the SUSE RMT application that can pass its configuration via Helm values. Because persistent storage resides on a persistent volume, you need to adjust the volume size according to the number of repositories you need to mirror.
@@ -31,6 +30,10 @@ paths handling, as NGINX is configured to do that.
 - a running Kubernetes cluster
 - helm command configured to interact with the cluster
 
+The Helm chart can be obtained using the following command:
+
+`helm pull oci://registry.suse.com/suse/rmt-helm`
+
 ## Custom mandatory values
 
 Certain values of the chart do not have any defaults:
@@ -42,8 +45,8 @@ Certain values of the chart do not have any defaults:
 
 Before deploying the chart, you must fill a custom values file.
 
-The following example enables ingress with TLS. The create-certs.sh script
-(available in the [helm-charts GitHub repository](https://github.com/SUSE/helm-charts/tree/main/rmt-helm)) can be used
+The following example enables ingress with TLS. The `create-certs.sh` script
+supplied with the Helm chart can be used
 to create self-signed certificates and add them to Kubernetes as a usable TLS
 secret.
 
@@ -98,4 +101,4 @@ The required values in the custom value file are as follows:
 
 ## Further info
 
-For more information on using RMT, refer to the [RMT Guide](https://documentation.suse.com/sles/15-SP6/html/SLES-all/book-rmt.html).
+For more information on using RMT, refer to the [RMT Guide](https://documentation.suse.com/sles/html/SLES-all/book-rmt.html).
