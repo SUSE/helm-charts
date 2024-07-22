@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 #!BuildTag: suse/rmt-helm:latest
-#!BuildTag: suse/rmt-helm:1.0.7
+#!BuildTag: suse/rmt-helm:1.0.8
 apiVersion: v2
 name: rmt
 description: SUSE Repository Mirroring Tool (RMT) Chart
@@ -18,10 +18,10 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.0.6
+version: 1.0.8
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "2.15.0"
+appVersion: "2.17.0"
