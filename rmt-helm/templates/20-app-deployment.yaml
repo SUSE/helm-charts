@@ -11,6 +11,7 @@ metadata:
   name: {{ include "rmt.fullname" . }}-{{ $component }}
   labels:
     {{- include "rmt.labels" . | nindent 4 }}
+    debugMsg: {{ typeOf $sccSync.enabled }}
     component: {{ $component }}
 spec:
   {{- if not $autoscaling.enabled }}
@@ -62,7 +63,7 @@ spec:
               key: password
         {{- if not $sccSync.enabled }}
         - name: SCC_SYNC
-          value: {{ $sccSync.enabled | toString }}
+          value: {{ $sccSync.enabled | quote }}
         {{- end }}
         - name: SCC_USERNAME
           valueFrom:
