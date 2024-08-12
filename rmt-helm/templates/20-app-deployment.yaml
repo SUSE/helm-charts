@@ -62,7 +62,7 @@ spec:
               key: password
         {{- if not $sccSync.enabled }}
         - name: SCC_SYNC
-          value: {{ $sccSync.enabled | toString }}
+          value: {{ $sccSync.enabled | quote }}
         {{- end }}
         - name: SCC_USERNAME
           valueFrom:
