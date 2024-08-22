@@ -101,19 +101,10 @@ spec:
         volumeMounts:
         - name: {{ include "rmt.fullname" . }}-{{ $component }}-pv
           mountPath: /var/lib/rmt
-        {{- if not $sccSync.enabled }}
-        - name: {{ include "rmt.fullname" . }}-{{ $component }}-entrypoint
-          mountPath: /usr/local/bin
-        {{- end }}
       volumes:
       - name: {{ include "rmt.fullname" . }}-{{ $component }}-pv
         persistentVolumeClaim:
           claimName: {{ include "rmt.fullname" . }}-{{ $component }}
-      {{- if not $sccSync.enabled }}
-      - name: {{ include "rmt.fullname" . }}-{{ $component }}-entrypoint
-        configMap:
-          name: {{ include "rmt.fullname" . }}-{{ $component }}-config
-      {{- end }}
       initContainers:
       - name: "{{ .Chart.Name }}-{{ $component }}-init"
         image: "{{ $initImage.repository }}:{{ $initImage.tag | default .Chart.AppVersion }}"
