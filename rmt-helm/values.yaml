@@ -1,3 +1,5 @@
+---
+
 # Default values for rmt.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
@@ -105,10 +107,10 @@ ingress:
         - path: "/"
           pathType: Prefix
   tls:
-  - secretName: rmt-cert
-    hosts:
-    # -- DNS name at which the RMT service will be accessible from clients
-    - chart-example.local
+    - secretName: rmt-cert
+      hosts:
+        # -- DNS name at which the RMT service will be accessible from clients
+        - chart-example.local
 
 serviceAccount:
   # Specifies whether a service account should be created
