@@ -84,6 +84,11 @@ spec:
             configMapKeyRef:
               name: {{ include "rmt.fullname" . }}-{{ $component }}
               key: products_disable
+        - name: SCC_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "rmt.fullname" . }}-{{ $component }}
+              key: scc_host
         {{- with .Values.app.env }}
           {{- if .http_proxy }}
         - name: http_proxy

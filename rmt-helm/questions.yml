@@ -16,7 +16,13 @@ questions:
   required: true
   type: string
   group: "SUSE Customer Center"
-
+- variable: app.scc.host
+  default: https://scc.suse.com
+  description: "SCC Host address"
+  label: "SCC Host"
+  required: true
+  type: string
+  group: "SUSE Customer Center"
 #RMT Configuration
 
 - variable: app.service.port
