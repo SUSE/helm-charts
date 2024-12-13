@@ -5,6 +5,7 @@ kind: ConfigMap
 metadata:
   name: {{ include "rmt.fullname" . }}-{{ $component }}
 data:
+  scc_host: {{ .Values.app.scc.host }}
   products_enable: |-
     {{- range .Values.app.scc.products_enable}}
     {{ . }}
