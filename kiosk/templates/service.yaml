@@ -1,0 +1,19 @@
+{{- range .Values.additionalContainers }}
+{{ if .ports }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-{{.name}}
+spec:
+  ports:
+  {{- range .ports}}
+  - name: {{ .name }}
+    port: {{ .servicePort }}
+    protocol: TCP
+    targetPort: {{ .targetPort }}
+  {{- end }}
+  selector:
+    {{- include "kiosk.selectorLabels" $ | nindent 4 }}
+  type: ClusterIP
+{{ end }}
+{{- end }}

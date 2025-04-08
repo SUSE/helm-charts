@@ -1,0 +1,122 @@
+# Default values for kiosk.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+X11:
+  image:
+    repository: registry.suse.com/suse/kiosk/xorg
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "21.1"
+  # Configuration to override the keyboard mapping using xmodmap.
+  keyboardModMap: null
+  # Configuration to override the keyboard layout using xkb.
+  customKeyboardLayout: null
+  # Add additional commands prior to startx (such as xrandr).
+  xinitrcOverride: null
+
+pulseaudio:
+  image:
+    repository: registry.suse.com/suse/kiosk/pulseaudio
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "17.0"
+
+workload:
+  # X application workload (defaults to firefox).
+  image:
+    repository: registry.suse.com/suse/kiosk/firefox-esr
+    pullPolicy: Always
+    tag: "128.10"
+  # Sets the URL environment variable.
+  # This page will be used if using Firefox as the workload.
+  url: "https://suse.com"
+  # Additional environment variables to passthrough into the workload.
+  env:
+    # - name: "NAME"
+    #   value: "1"
+  # Use this to side-loading a new trust store for chromium based workloads (including electron.js).
+  nssdbSecretName: null
+  # These allow for side-loading addtional files into the workload
+  #   Both are a list with each entry having `name` and `mountPath`
+  #   where `name` is the name of a secret/configmap that exists
+  #   in the same namespace as this chart
+  #   and mountPath is where the files should be mounted
+  additionalConfigMaps: []
+  additionalSecrets: []
+  # These allow for adding health checks for the workload.
+  # For more information, refer to: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  # readinessProbe:
+  #   httpGet:
+  #     path: /health/ready
+  #     port: 8080
+  #   initialDelaySeconds: 5
+  #   periodSeconds: 10
+  # livenessProbe:
+  #   httpGet:
+  #     path: /health/live
+  #     port: 8080
+  #   initialDelaySeconds: 15
+  #   periodSeconds: 20
+  # startupProbe:
+  #   httpGet:
+  #     path: /health/startup
+  #     port: 8080
+  #   failureThreshold: 30
+  #   periodSeconds: 5
+  # This allows for mounting an tmpfs (i.e. EmptyDir with `medium: Memory`) to /dev/shm for the browser to use.
+  shm:
+    enabled: true
+    sizeLimit: 256Mi
+
+# This allows for adding containers to the same pod (such as VNC or testing tools)
+# These can optionally have access to X11 and pulse audio
+# additionalContainers:
+#   - name: vnc
+#     image:
+#       repository: registry.opensuse.org/home/atgracey/wallboardos/15.6/vnc
+#       tag: "vnc"
+#       pullPolicy: IfNotPresent
+#     ports:
+#       - name: vnc
+#         targetPort: 5900
+#         servicePort: 5900
+#     env:
+#       - name: NAME
+#         value: "1"
+#     accessDisplay: true
+
+# Define secrets for a private registry
+# imagePullSecrets:
+#   - name: my-private-registry-secret
+
+# # Override the chart name and its fully qualified name.
+# nameOverride: ""
+# fullnameOverride: ""
+
+# # Set extra labels and anotations.
+# podLabels:
+#   app.kubernetes.io/component: kiosk
+# podAnnotations:
+#   description: "kiosk workload"
+#   createdBy: "admin@example.com"
+
+# # Limit resources used by the workload.
+# resources:
+#   limits:
+#     memory: "512Mi"
+#     cpu: "1"
+#   requests:
+#     memory: "256Mi"
+#     cpu: "0.5"
+
+# # Select where the containers are deployed.
+# nodeSelector:
+#   disktype: ssd
+
+# # For adding custom hostnames for the workload to use.
+# hostAliases:
+#   - ip: "10.1.1.50"
+#     hostnames:
+#       - "kiosk.local"
+#       - "wallboard"

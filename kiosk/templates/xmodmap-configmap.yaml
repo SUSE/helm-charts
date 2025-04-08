@@ -1,0 +1,18 @@
+{{- with .Values.X11.keyboardModMap }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: xmodmap
+data:
+  .Xmodmap:
+  {{- toYaml . | nindent 4 }}
+{{- end }}
+{{- with .Values.X11.customKeyboardLayout }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: xkb-config
+data:
+  custom_layout:
+    {{- toYaml . | nindent 4 }}
+{{- end }}
