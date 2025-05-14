@@ -1,0 +1,1 @@
+Your Kiosk application is running using the container: {{ .Values.workload.image.repository }}:{{ .Values.workload.image.tag }}
