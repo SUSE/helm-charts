@@ -46,7 +46,6 @@ spec:
             {{- end }}
             {{- with .Values.X11.xinitrcOverride }}
             - mountPath: /etc/X11/xinit/
-              subPath: xinitrc
               name: xinitrc
             {{- end }}
             {{- with .Values.X11.customKeyboardLayout }}
