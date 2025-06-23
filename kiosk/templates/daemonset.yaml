@@ -46,13 +46,16 @@ spec:
             {{- end }}
             {{- with .Values.X11.xinitrcOverride }}
             - mountPath: /etc/X11/xinit/
-              subPath: xinitrc
               name: xinitrc
             {{- end }}
             {{- with .Values.X11.customKeyboardLayout }}
             - name: xkb-config
               mountPath: /usr/share/X11/xkb/symbols/custom_layout
               subPath: custom_layout
+            {{- end }}
+            {{- with .Values.X11.customBackgroundConfigMap }}
+            - name: custom_background
+              mountPath: /usr/share/wallpapers/SLEdefault/contents/images
             {{- end }}
         - name: pulseaudio
           image: {{ .Values.pulseaudio.image.repository }}:{{ .Values.pulseaudio.image.tag }}
@@ -164,6 +167,14 @@ spec:
         - name: {{ .name }}
           image: "{{ .image.repository }}:{{ .image.tag }}"
           imagePullPolicy: {{ .image.pullPolicy }}
+          {{- with .command }}
+          command:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           ports:
             {{- range .ports }}
             - containerPort: {{ .targetPort }}
