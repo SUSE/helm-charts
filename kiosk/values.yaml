@@ -14,6 +14,9 @@ X11:
   customKeyboardLayout: null
   # Add additional commands prior to startx (such as xrandr).
   xinitrcOverride: null
+  # Allow for setting a custom background image using an existing configmap as the source
+  # The named configmap must be in the same namespace this chart is installed in 
+  customBackgroundConfigMap: null
 
 pulseaudio:
   image:
@@ -77,6 +80,10 @@ workload:
 #       repository: registry.opensuse.org/home/atgracey/wallboardos/15.6/vnc
 #       tag: "vnc"
 #       pullPolicy: IfNotPresent
+#     command: ["bash"]
+#     args:
+#       - -c
+#       - x11vnc -shared -forever
 #     ports:
 #       - name: vnc
 #         targetPort: 5900
@@ -112,7 +119,7 @@ workload:
 
 # # Select where the containers are deployed.
 # nodeSelector:
-#   disktype: ssd
+#   displayAttached: true
 
 # # For adding custom hostnames for the workload to use.
 # hostAliases:
