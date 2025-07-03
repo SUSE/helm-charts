@@ -174,7 +174,7 @@ questions:
     description: "DNS path at which the RMT service will be accessible from clients"
     label: "Ingress Path"
     required: true
-    type: string    
+    type: string
   - variable: front.service.port
     default: "80"
     description: "Nginx Service Port"
@@ -327,8 +327,8 @@ questions:
   type: string
   group: "Misc"
 - variable: front.image.repository
-  default: "registry.suse.com/suse/rmt-nginx"
-  description: "RMT Nginx Image"
+  default: "registry.suse.com/suse/nginx"
+  description: "Nginx Image"
   label: "RMT Nginx Image"
   required: false
   type: string
