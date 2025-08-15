@@ -45,7 +45,7 @@ app:
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     # -- RMT server image tag
-    tag: "2.21"
+    tag: "2.23"
   mysql:
     # -- mysql host to connect to (default target is db container)
     host:
@@ -71,7 +71,7 @@ app:
     no_proxy: ""
   cronjob:
     sync:
-      # -- schedule for running rmt-cli sync command (syncing to SUSE db)
+      # -- schedule for running rmt-cli sync command (syncing data from SCC)
       schedule: "* 1 * * *"
     mirror:
       # -- schedule for running rmt-cli mirror command (actual package mirroring)
