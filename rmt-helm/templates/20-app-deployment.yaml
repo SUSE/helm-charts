@@ -114,7 +114,7 @@ spec:
       - name: "{{ .Chart.Name }}-{{ $component }}-init"
         image: "{{ $initImage.repository }}:{{ $initImage.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ $initImage.pullPolicy | default "IfNotPresent" }}
-        command: ['sh', '-c', 'until mysqladmin ping -h ${MYSQL_HOST} --silent; do echo waiting for mariadb; sleep 2; done;']
+        command: ['sh', '-c', 'until mariadb-ping ping -h ${MYSQL_HOST} --ssl-verify-server-cert=false; do echo waiting for mariadb; sleep 2; done;']
         env:
         - name: MYSQL_HOST
           value: {{ .Values.app.mysql.host | default (printf "%s-db" (include "rmt.fullname" . )) }}
