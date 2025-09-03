@@ -6,7 +6,7 @@ metadata:
   name: {{ include "rmt.fullname" . }}-{{ $component }}
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   storageClassName: {{ .Values.db.storage.class }}
   resources:
     requests:
