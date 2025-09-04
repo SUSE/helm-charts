@@ -5,8 +5,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{ include "rmt.fullname" . }}-{{ $component }}
 spec:
-  accessModes:
-    - ReadWriteOnce
+  accessModes: 
+  {{- range .Values.app.storage.accessModes }}
+    - {{ . }}
+  {{- end }}
   storageClassName: {{ .Values.app.storage.class }}
   resources:
     requests:

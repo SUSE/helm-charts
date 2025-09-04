@@ -53,6 +53,8 @@ app:
     class:
     # -- RMT server storage volume requirements. This can vary greatly depending on the number of modules to mirror.
     size: 300Mi
+    accessModes: 
+    - ReadWriteMany
   scc:
     host: https://scc.suse.com/connect
     # -- Enable or Disable the sync with SCC
