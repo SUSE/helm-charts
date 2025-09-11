@@ -5,8 +5,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{ include "rmt.fullname" . }}-{{ $component }}
 spec:
-  accessModes:
-    - ReadWriteOnce
+  accessMode: {{- toYaml .Values.app.storage.accessModes | nindent 4 }}
   storageClassName: {{ .Values.app.storage.class }}
   resources:
     requests:
