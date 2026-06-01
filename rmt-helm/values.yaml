@@ -45,7 +45,7 @@ app:
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     # -- RMT server image tag
-    tag: "2.25"
+    tag: "2.26"
   mysql:
     # -- mysql host to connect to (default target is db container)
     host:
@@ -53,7 +53,7 @@ app:
     class:
     # -- RMT server storage volume requirements. This can vary greatly depending on the number of modules to mirror.
     size: 300Mi
-    accessModes: 
+    accessModes:
     - ReadWriteOnce
   scc:
     host: https://scc.suse.com/connect
