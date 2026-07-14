@@ -45,7 +45,7 @@ app:
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     # -- RMT server image tag
-    tag: "2.27"
+    tag: "2.28"
   mysql:
     # -- mysql host to connect to (default target is db container)
     host:
@@ -92,7 +92,7 @@ front:
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     # -- Nginx image tag
-    tag: "1.21"
+    tag: "1.27"
   service:
     # -- Nginx service port
     port: 80
