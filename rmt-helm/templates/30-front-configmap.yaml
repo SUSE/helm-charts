@@ -1,4 +1,5 @@
 ---
+{{- if .Values.front.enabled -}}
 {{- $component := "front" -}}
 apiVersion: v1
 kind: ConfigMap
@@ -57,3 +58,4 @@ data:
             alias /srv/www/htdocs/index.html;
         }
     }
+{{- end }}

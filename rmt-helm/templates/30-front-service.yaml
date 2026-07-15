@@ -1,4 +1,5 @@
 ---
+{{- if .Values.front.enabled -}}
 {{- $component := "front" -}}
 apiVersion: v1
 kind: Service
@@ -16,3 +17,4 @@ spec:
   selector:
     {{- include "rmt.selectorLabels" . | nindent 4 }}
     component: {{ $component }}
+{{- end }}
