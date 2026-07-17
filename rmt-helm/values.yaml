@@ -80,6 +80,8 @@ app:
       schedule: "30 2 * * *"
 
 front:
+  # -- Enable or disable the front nginx container
+  enabled: true
   init:
     image:
       repository: registry.suse.com/bci/bci-micro

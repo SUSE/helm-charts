@@ -1,5 +1,5 @@
 ---
-{{- if .Values.ingress.enabled -}}
+{{- if and .Values.ingress.enabled .Values.front.enabled -}}
 {{- $component := "front" -}}
 {{- $fullName := include "rmt.fullname" . -}}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
