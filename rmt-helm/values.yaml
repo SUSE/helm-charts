@@ -125,3 +125,13 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
+
+# Controls whether this chart creates the db and app Kubernetes Secrets itself.
+# Set to `false` when the Secrets are managed externally (e.g. by Vault Secrets Operator
+# via a separate chart). In that case, the pre-existing Secrets must be named
+# (where <fullname> is the value produced by the `rmt.fullname` helper, typically
+# the release name — e.g. `rmt` for `helm install rmt ./rmt-helm`):
+#   - <fullname>-db   with keys: password, rootPassword
+#   - <fullname>-app  with keys: username, password
+secrets:
+  create: true
