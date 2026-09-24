@@ -109,6 +109,31 @@ The required values in the custom value file are as follows:
 - `ingress.tls[0].hosts[0]` DNS name at which the RMT service is be accessible from clients.
 - `ingress.tls[0].secretName` TLS ingress certificate.
 
+## Using existing PersistentVolumeClaims
+
+By default, the chart creates two PVCs:
+
+- `<release>-<chart>-db` — used by MariaDB (mounted at `/var/lib/mysql`)
+- `<release>-<chart>-app` — used by the RMT server and its cronjobs (mounted at `/var/lib/rmt`)
+
+If you want to mount **pre-existing PVCs** (for example, PVCs bound to statically provisioned PVs, or PVCs managed by a parent/wrapper chart), set `db.storage.existingClaim` and/or `app.storage.existingClaim` to the name of the existing PVC. When set, the chart will **not** create that PVC and the deployments/cronjobs will mount the specified claim instead.
+
+```yaml
+db:
+  storage:
+    existingClaim: my-rmt-db-pvc
+app:
+  storage:
+    existingClaim: my-rmt-app-pvc
+```
+
+Notes:
+
+- The referenced PVCs must already exist in the same namespace as the release.
+- When `existingClaim` is set for a component, its `storage.class`, `storage.size`, and (for `app`) `storage.accessModes` are ignored for that component — the existing PVC's own spec applies.
+- Leaving `existingClaim` empty (default) preserves the current behavior — the chart creates and manages the PVC itself.
+- `db.storage.existingClaim` and `app.storage.existingClaim` are independent: you can override one while letting the chart create the other.
+
 ## Deploying
 
 `helm install rmt ./helm -f myvalues.yaml`
