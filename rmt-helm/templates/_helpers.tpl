@@ -88,3 +88,19 @@ the default "<fullname>-app".
 {{- default (printf "%s-app" (include "rmt.fullname" .)) .Values.secrets.existingAppSecret -}}
 {{- end -}}
 {{- end }}
+{{/*
+Resolve the DB PVC name.
+Returns .Values.db.storage.existingClaim if set, otherwise the chart-managed default.
+*/}}
+{{- define "rmt.db.pvcName" -}}
+{{- .Values.db.storage.existingClaim | default (printf "%s-db" (include "rmt.fullname" .)) -}}
+{{- end }}
+
+{{/*
+Resolve the App PVC name.
+Returns .Values.app.storage.existingClaim if set, otherwise the chart-managed default.
+*/}}
+{{- define "rmt.app.pvcName" -}}
+{{- .Values.app.storage.existingClaim | default (printf "%s-app" (include "rmt.fullname" .)) -}}
+{{- end }}
+
