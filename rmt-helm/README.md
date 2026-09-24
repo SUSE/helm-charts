@@ -113,19 +113,10 @@ The required values in the custom value file are as follows:
 
 By default, the chart creates two PVCs:
 
-- `<release>-<chart>-db` — used by MariaDB (mounted at `/var/lib/mysql`)
-- `<release>-<chart>-app` — used by the RMT server and its cronjobs (mounted at `/var/lib/rmt`)
+- `<release>-<chart>-db` — used by MariaDB
+- `<release>-<chart>-app` — used by the RMT server and its cronjobs
 
-If you want to mount **pre-existing PVCs** (for example, PVCs bound to statically provisioned PVs, or PVCs managed by a parent/wrapper chart), set `db.storage.existingClaim` and/or `app.storage.existingClaim` to the name of the existing PVC. When set, the chart will **not** create that PVC and the deployments/cronjobs will mount the specified claim instead.
-
-```yaml
-db:
-  storage:
-    existingClaim: my-rmt-db-pvc
-app:
-  storage:
-    existingClaim: my-rmt-app-pvc
-```
+If you want to mount **pre-existing PVCs** (for example, PVCs bound to statically provisioned PVs, or PVCs managed by a parent/wrapper chart),set `db.storage.existingClaim` and/or `app.storage.existingClaim` to the name of the existing PVC. When set, the chart will **not** create that PVC and the deployments/cronjobs will mount the specified claim instead.
 
 Notes:
 

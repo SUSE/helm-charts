@@ -16,7 +16,7 @@ db:
     class:
     # -- db storage volume space requirements
     size: 100Mi
-    # -- Name of an existing PVC to mount for the database. Empty = chart creates its own PVC.
+    # -- Name of an existing PVC to mount for the database. Empty means chart creates its own PVC.
     existingClaim: ""
   mysql:
     # -- db name
@@ -57,7 +57,7 @@ app:
     size: 300Mi
     accessModes:
     - ReadWriteOnce
-    # -- Name of an existing PVC to mount for RMT data. Empty = chart creates its own PVC.
+    # -- Name of an existing PVC to mount for RMT data. Empty means chart creates its own PVC.
     existingClaim: ""
   scc:
     host: https://scc.suse.com/connect
