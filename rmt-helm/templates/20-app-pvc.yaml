@@ -1,4 +1,5 @@
 ---
+{{- if not .Values.app.storage.existingClaim }}
 {{- $component := "app" -}}
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -10,3 +11,4 @@ spec:
   resources:
     requests:
       storage: {{ .Values.app.storage.size }}
+{{- end }}

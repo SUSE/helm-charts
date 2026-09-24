@@ -119,7 +119,7 @@ spec:
       volumes:
       - name: {{ include "rmt.fullname" . }}-{{ $component }}-pv
         persistentVolumeClaim:
-          claimName: {{ include "rmt.fullname" . }}-{{ $component }}
+          claimName: {{ include "rmt.app.pvcName" . }}
       initContainers:
       - name: "{{ .Chart.Name }}-{{ $component }}-init"
         image: "{{ $initImage.repository }}:{{ $initImage.tag | default .Chart.AppVersion }}"
