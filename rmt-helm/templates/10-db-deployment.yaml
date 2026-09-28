@@ -53,12 +53,12 @@ spec:
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ include "rmt.fullname" . }}-{{ $component }}
+              name: {{ include "rmt.dbSecretName" . }}
               key: password
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ include "rmt.fullname" . }}-{{ $component }}
+              name: {{ include "rmt.dbSecretName" . }}
               key: rootPassword
         volumeMounts:
         - name: {{ include "rmt.fullname" . }}-{{ $component }}

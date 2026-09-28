@@ -111,7 +111,7 @@ The required values in the custom value file are as follows:
 - `ingress.tls[0].hosts[0]` DNS name at which the RMT service is be accessible from clients.
 - `ingress.tls[0].secretName` TLS ingress certificate.
 
-## Externally-managed Secrets
+## Secret names and external Secret management
 
 By default (`secrets.create: true`) this chart renders two Kubernetes Secrets.
 Their names come from `{{ include "rmt.fullname" . }}` (defined in
@@ -122,14 +122,21 @@ Their names come from `{{ include "rmt.fullname" . }}` (defined in
 
 For the common case `helm install rmt ./rmt-helm`, the names resolve to
 `rmt-db` and `rmt-app` — the same names referenced by the Deployment and
-CronJob templates.
+CronJob templates. When the chart creates the Secrets itself
+(`secrets.create: true`), these default names are always used.
+
+### Externally-managed Secrets
 
 To let another component (for example, HashiCorp Vault Secrets Operator managed
-by a separate Helm chart) own those Secrets, set:
+by a separate Helm chart) own those Secrets, set `secrets.create: false`. In
+that mode you may point the chart at pre-existing Secrets that use self-defining
+names via `secrets.existingDbSecret` and `secrets.existingAppSecret`:
 
 ```yaml
 secrets:
   create: false
+  existingDbSecret: rmt-vault-db
+  existingAppSecret: rmt-vault-scc
 ```
 
 When `secrets.create` is `false`:
@@ -137,13 +144,14 @@ When `secrets.create` is `false`:
 - This chart no longer renders `10-db-secrets.yaml` / `20-app-secrets.yaml`.
 - `app.scc.username` and `app.scc.password` are no longer required in your
   values file — they must be present in the externally-created Secret instead.
-- You must ensure the following Secrets already exist in the target namespace
-  **before** installing this chart, with these exact names and keys:
+- You must ensure the required Secrets already exist in the target namespace
+  **before** installing this chart, with these keys:
 
   | Secret name | Keys |
   |---|---|
-  | `<fullname>-db` | `password`, `rootPassword` |
-  | `<fullname>-app` | `username`, `password` |
+  | `existingDbSecret` (default `<fullname>-db`) | `password`, `rootPassword` |
+  | `existingAppSecret` (default `<fullname>-app`) | `username`, `password` |
+
 
 ## Deploying
 

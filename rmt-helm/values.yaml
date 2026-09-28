@@ -128,10 +128,12 @@ serviceAccount:
 
 # Controls whether this chart creates the db and app Kubernetes Secrets itself.
 # Set to `false` when the Secrets are managed externally (e.g. by Vault Secrets Operator
-# via a separate chart). In that case, the pre-existing Secrets must be named
-# (where <fullname> is the value produced by the `rmt.fullname` helper, typically
-# the release name — e.g. `rmt` for `helm install rmt ./rmt-helm`):
-#   - <fullname>-db   with keys: password, rootPassword
-#   - <fullname>-app  with keys: username, password
+# via a separate chart).
 secrets:
   create: true
+  # Names of pre-existing, externally-managed Secrets. These are only used when
+  # `create` is false
+  # Name of the existing Secret holding the database credentials
+  existingDbSecret: ""
+  # Name of the existing Secret holding the SCC credentials
+  existingAppSecret: ""
