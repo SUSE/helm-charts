@@ -84,6 +84,16 @@ spec:
             configMapKeyRef:
               name: {{ include "rmt.fullname" . }}-{{ $component }}
               key: products_disable
+        - name: SCC_REPO_ENABLE
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "rmt.fullname" . }}-{{ $component }}
+              key: repos_enable
+        - name: SCC_REPO_DISABLE
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "rmt.fullname" . }}-{{ $component }}
+              key: repos_disable
         - name: SCC_HOST
           valueFrom:
             configMapKeyRef:

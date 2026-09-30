@@ -60,6 +60,20 @@ questions:
   required: true
   type: string
   group: "Product List"
+- variable: app.scc.repos_enable
+  default: []
+  description: "List of repos to enable for mirroring"
+  label: "SCC mirroring enabled repos"
+  required: false 
+  type: list
+  group: "Repo List"
+- variable: app.scc.repos_disable
+  default: []
+  description: "List of repos to disabled for mirroring"
+  label: "SCC mirroring disabled repos"
+  required: false
+  type: string
+  group: "Repo List"
 
 # Database AutoScaling
 
