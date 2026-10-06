@@ -14,3 +14,11 @@ data:
     {{- range .Values.app.scc.products_disable}}
     {{ . }}
     {{- end }}
+  repos_enable: |-  
+    {{- range .Values.app.scc.repos_enable}}
+    {{ . }}
+    {{- end }}
+  repos_disable: |-
+    {{- range .Values.app.scc.repos_disable}}
+    {{ . }}
+    {{- end }}  
