@@ -35,17 +35,17 @@ spec:
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ include "rmt.fullname" . }}-db"
+                  name: {{ include "rmt.dbSecretName" . }}
                   key: password
             - name: SCC_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "rmt.fullname" . }}-{{ $component }}
+                  name: {{ include "rmt.appSecretName" . }}
                   key: username
             - name: SCC_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "rmt.fullname" . }}-{{ $component }}
+                  name: {{ include "rmt.appSecretName" . }}
                   key: password
             {{- with .Values.app.env }}
               {{- if .http_proxy }}
@@ -104,17 +104,17 @@ spec:
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ include "rmt.fullname" . }}-db"
+                  name: {{ include "rmt.dbSecretName" . }}
                   key: password
             - name: SCC_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "rmt.fullname" . }}-{{ $component }}
+                  name: {{ include "rmt.appSecretName" . }}
                   key: username
             - name: SCC_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "rmt.fullname" . }}-{{ $component }}
+                  name: {{ include "rmt.appSecretName" . }}
                   key: password
             {{- with .Values.app.env }}
               {{- if .http_proxy }}
