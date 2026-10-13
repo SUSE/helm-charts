@@ -137,3 +137,17 @@ secrets:
   existingDbSecret: ""
   # Name of the existing Secret holding the SCC credentials
   existingAppSecret: ""
+
+networkPolicy:
+  # -- Enable or disable the NetworkPolicy resource
+  # -- Ref: https://kubernetes.io/docs/concepts/services-networking/network-policies/
+  enabled: false
+  # ingress and egress follow the Kubernetes NetworkPolicy spec.
+  # "ports" below is just an example - you can also use "from"/"to" with
+  # podSelector, namespaceSelector or ipBlock. See the Ref link above.
+  # ingress:
+  #   - ports:
+  #       - {port: 443, protocol: TCP}
+  # egress:
+  #   - ports:
+  #       - {port: 53, protocol: UDP}

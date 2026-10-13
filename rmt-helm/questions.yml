@@ -215,6 +215,16 @@ questions:
     type: string
 
 
+# Network Policy Configuration
+
+- variable: networkPolicy.enabled
+  default: false
+  description: "Enable NetworkPolicy resource"
+  label: "NetworkPolicy Enabled"
+  required: false
+  type: boolean
+  group: "Network Policy"
+
 # Misc Configuration
 
 - variable: app.env.http_proxy
