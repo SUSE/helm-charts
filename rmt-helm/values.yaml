@@ -147,7 +147,7 @@ networkPolicy:
   # podSelector, namespaceSelector or ipBlock. See the Ref link above.
   # ingress:
   #   - ports:
-  #       - {port: 443, protocol: TCP}
+  #       - {port: 4224, protocol: TCP}
   # egress:
   #   - ports:
   #       - {port: 53, protocol: UDP}
