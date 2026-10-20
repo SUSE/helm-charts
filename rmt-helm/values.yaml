@@ -142,12 +142,38 @@ networkPolicy:
   # -- Enable or disable the NetworkPolicy resource
   # -- Ref: https://kubernetes.io/docs/concepts/services-networking/network-policies/
   enabled: false
-  # ingress and egress follow the Kubernetes NetworkPolicy spec.
-  # "ports" below is just an example - you can also use "from"/"to" with
-  # podSelector, namespaceSelector or ipBlock. See the Ref link above.
-  # ingress:
-  #   - ports:
-  #       - {port: 4224, protocol: TCP}
-  # egress:
-  #   - ports:
-  #       - {port: 53, protocol: UDP}
+
+  # -- When true, the chart generates a sensible default policy for RMT
+  #    (ingress 4224 open, 3306 from app/cronjob pods; egress DNS, 3306, and
+  #    443/80 to SCC/mirror). Set to false to supply your own rules via the
+  #    ingress/egress fields below.
+  defaultRules: true
+  dnsNamespace: kube-system
+
+  # -- Optional cluster DNS service IP as an ipBlock CIDR.
+  #    Leave empty to rely on the kube-system namespaceSelector only.
+  dnsCIDR: "100.104.64.10/32"
+
+  # -- Egress CIDR for SCC and SUSE mirror servers (scc.suse.com / updates.suse.com) on ports 443/80.
+  # Used when defaultRules is true.
+  externalEgressCIDR: "0.0.0.0/0"
+
+  # -- Custom ingress/egress rules. Only used when defaultRules is false.
+  #    These follow the Kubernetes NetworkPolicy spec verbatim.
+  #    NOTE: listing a direction with no matching rules = deny-all for that direction.
+  policyTypes: []
+  ingress: []
+  egress: []
+  # -- policyTypes: leave empty [] to auto-derive from which of ingress/egress
+  #    you define below. Set explicitly (e.g. [Ingress] or [Ingress, Egress])
+  #    to force enforcement of specific directions.
+  #
+  # -- ingress/egress examples:
+  #    ingress:
+  #      - ports:
+  #          - {port: 4224, protocol: TCP}
+  #    egress:
+  #      - ports:
+  #          - {port: 53, protocol: UDP}
+  #          - {port: 53, protocol: TCP}
+

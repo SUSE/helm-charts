@@ -1,4 +1,5 @@
 {{- if .Values.networkPolicy.enabled }}
+{{- $appComponent := "app" -}}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -9,19 +10,64 @@ spec:
   podSelector:
     matchLabels:
       {{- include "rmt.selectorLabels" . | nindent 6 }}
+{{- if .Values.networkPolicy.defaultRules }}
   policyTypes:
-  {{- if .Values.networkPolicy.ingress }}
-  - Ingress
-  {{- end }}
-  {{- if .Values.networkPolicy.egress }}
-  - Egress
-  {{- end }}
-  {{- if .Values.networkPolicy.ingress }}
+    - Ingress
+    - Egress
   ingress:
-  {{- toYaml .Values.networkPolicy.ingress | nindent 2 }}
-  {{- end }}
-  {{- if .Values.networkPolicy.egress }}
+    - ports:
+        - {port: {{ .Values.app.service.port }}, protocol: TCP}
+    # MariaDB - only from the RMT app + sync/mirror cronjob pods (all share component=app)
+    - from:
+        - podSelector:
+            matchLabels:
+              {{- include "rmt.selectorLabels" . | nindent 14 }}
+              component: {{ $appComponent }}
+      ports:
+        - {port: 3306, protocol: TCP}
   egress:
-  {{- toYaml .Values.networkPolicy.egress | nindent 2 }}
+    # DNS resolution in the dnsNamespace
+    - ports:
+        - {port: 53, protocol: UDP}
+        - {port: 53, protocol: TCP}
+      to:
+        {{- if .Values.networkPolicy.dnsCIDR }}
+        - ipBlock:
+            cidr: {{ .Values.networkPolicy.dnsCIDR }}
+        {{- end }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Values.networkPolicy.dnsNamespace }}
+    # MariaDB egress (RMT app + cronjobs reaching the db on 3306)
+    - ports:
+        - {port: 3306, protocol: TCP}
+    # SCC + SUSE mirror/update servers
+    - ports:
+        - {port: 443, protocol: TCP}
+        - {port: 80, protocol: TCP}
+      to:
+        - ipBlock:
+            cidr: {{ .Values.networkPolicy.externalEgressCIDR }}
+{{- else }}
+  # ---- User-supplied rules (networkPolicy.defaultRules: false) ----
+  policyTypes:
+  {{- if .Values.networkPolicy.policyTypes }}
+    {{- toYaml .Values.networkPolicy.policyTypes | nindent 4 }}
+  {{- else }}
+    {{- if .Values.networkPolicy.ingress }}
+    - Ingress
+    {{- end }}
+    {{- if .Values.networkPolicy.egress }}
+    - Egress
+    {{- end }}
   {{- end }}
+  {{- with .Values.networkPolicy.ingress }}
+  ingress:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.networkPolicy.egress }}
+  egress:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
 {{- end }}
