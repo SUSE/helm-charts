@@ -152,6 +152,19 @@ When `secrets.create` is `false`:
   | `existingDbSecret` (default `<fullname>-db`) | `password`, `rootPassword` |
   | `existingAppSecret` (default `<fullname>-app`) | `username`, `password` |
 
+## Network Policy
+
+By default (`networkPolicy.enabled: false`) the chart does not create a NetworkPolicy resource.
+Set `networkPolicy.enabled: true` to enforce network traffic rules on the RMT pods.
+
+When `networkPolicy.enabled: true`, setting `networkPolicy.defaultRules: true` (the default)
+makes the chart generate a default ready-to-use policy.
+
+To supply your own rules instead (requires `networkPolicy.enabled: true`), set
+`networkPolicy.defaultRules: false` and provide `networkPolicy.ingress` and/or
+`networkPolicy.egress` following the Kubernetes
+[NetworkPolicy spec](https://kubernetes.io/docs/concepts/services-networking/network-policies/).
+Use `networkPolicy.policyTypes` to control which directions are enforced.
 
 ## Deploying
 

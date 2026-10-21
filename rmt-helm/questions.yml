@@ -215,15 +215,6 @@ questions:
     type: string
 
 
-# Network Policy Configuration
-
-- variable: networkPolicy.enabled
-  default: false
-  description: "Enable NetworkPolicy resource"
-  label: "NetworkPolicy Enabled"
-  required: false
-  type: boolean
-  group: "Network Policy"
 
 # Misc Configuration
 
@@ -385,3 +376,48 @@ questions:
   required: false
   type: string
   group: "Misc"
+
+# Network Policy Configuration
+
+- variable: networkPolicy.enabled
+  default: false
+  description: "Enable NetworkPolicy resource"
+  label: "NetworkPolicy Enabled"
+  required: false
+  type: boolean
+  group: "Network Policy"
+
+- variable: networkPolicy.defaultRules
+  default: true
+  description: "Only applies when NetworkPolicy is enabled. When true, the chart generates
+    a default policy"
+  label: "Use Default Rules"
+  required: false
+  type: boolean
+  group: "Network Policy"
+
+- variable: networkPolicy.externalEgressCIDR
+  default: "0.0.0.0/0"
+  description: "Egress CIDR for SCC and SUSE mirror servers. Narrow to your
+    egress proxy CIDR if required by your security policy"
+  label: "External Egress CIDR"
+  required: false
+  type: string
+  group: "Network Policy"
+
+- variable: networkPolicy.dnsNamespace
+  default: "kube-system"
+  description: "Used for the DNS egress rule"
+  label: "DNS Namespace"
+  required: false
+  type: string
+  group: "Network Policy"
+
+- variable: networkPolicy.dnsCIDR
+  default: ""
+  description: "cluster DNS service IP as an ipBlock CIDR"
+  label: "DNS Service CIDR"
+  required: false
+  type: string
+  group: "Network Policy"
+
