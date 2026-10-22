@@ -1,23 +1,29 @@
 {{- if .Values.networkPolicy.enabled }}
 {{- $appComponent := "app" -}}
+{{- $dbComponent := "db" -}}
+{{- $frontComponent := "front" -}}
+{{- $np := .Values.networkPolicy -}}
+---
+# ===== DB component policy =====
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ include "rmt.fullname" . }}-nw-policy
+  name: {{ include "rmt.fullname" . }}-{{ $dbComponent }}-nw-policy
   labels:
     {{- include "rmt.labels" . | nindent 4 }}
+    component: {{ $dbComponent }}
 spec:
   podSelector:
     matchLabels:
       {{- include "rmt.selectorLabels" . | nindent 6 }}
-{{- if .Values.networkPolicy.defaultRules }}
+      component: {{ $dbComponent }}
+{{- if $np.db.defaultRules }}
+  # ---- default rules ----
   policyTypes:
     - Ingress
     - Egress
   ingress:
-    - ports:
-        - {port: {{ .Values.app.service.port }}, protocol: TCP}
-    # MariaDB - only from the RMT app + sync/mirror cronjob pods (all share component=app)
+    # MariaDB 3306 - only from the RMT app + sync/mirror cronjob pods
     - from:
         - podSelector:
             matchLabels:
@@ -25,49 +31,179 @@ spec:
               component: {{ $appComponent }}
       ports:
         - {port: 3306, protocol: TCP}
+  # No egress: MariaDB initiates no outbound connections. Egress in policyTypes
+  # with no rules = deny-all egress.
+{{- else }}
+  # ---- user-supplied rules ----
+  policyTypes:
+  {{- if $np.db.policyTypes }}
+    {{- toYaml $np.db.policyTypes | nindent 4 }}
+  {{- else }}
+    {{- if $np.db.ingress }}
+    - Ingress
+    {{- end }}
+    {{- if $np.db.egress }}
+    - Egress
+    {{- end }}
+  {{- end }}
+  {{- with $np.db.ingress }}
+  ingress:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $np.db.egress }}
+  egress:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+
+---
+# ===== App component policy (also governs sync/mirror cronjobs: same component=app) =====
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "rmt.fullname" . }}-{{ $appComponent }}-nw-policy
+  labels:
+    {{- include "rmt.labels" . | nindent 4 }}
+    component: {{ $appComponent }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "rmt.selectorLabels" . | nindent 6 }}
+      component: {{ $appComponent }}
+{{- if $np.app.defaultRules }}
+  # ---- default rules ----
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # RMT web server
+    - ports:
+        - {port: {{ .Values.app.service.port }}, protocol: TCP}
   egress:
     # DNS resolution in the dnsNamespace
     - ports:
         - {port: 53, protocol: UDP}
         - {port: 53, protocol: TCP}
       to:
-        {{- if .Values.networkPolicy.dnsCIDR }}
+        {{- if $np.dnsCIDR }}
         - ipBlock:
-            cidr: {{ .Values.networkPolicy.dnsCIDR }}
+            cidr: {{ $np.dnsCIDR }}
         {{- end }}
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: {{ .Values.networkPolicy.dnsNamespace }}
-    # MariaDB egress (RMT app + cronjobs reaching the db on 3306)
+              kubernetes.io/metadata.name: {{ $np.dnsNamespace }}
+    # DB egress
     - ports:
         - {port: 3306, protocol: TCP}
+      to:
+        - podSelector:
+            matchLabels:
+              {{- include "rmt.selectorLabels" . | nindent 14 }}
+              component: {{ $dbComponent }}
     # SCC + SUSE mirror/update servers
     - ports:
         - {port: 443, protocol: TCP}
         - {port: 80, protocol: TCP}
       to:
         - ipBlock:
-            cidr: {{ .Values.networkPolicy.externalEgressCIDR }}
+            cidr: {{ $np.externalEgressCIDR }}
 {{- else }}
-  # ---- User-supplied rules (networkPolicy.defaultRules: false) ----
+  # ---- user-supplied rules ----
   policyTypes:
-  {{- if .Values.networkPolicy.policyTypes }}
-    {{- toYaml .Values.networkPolicy.policyTypes | nindent 4 }}
+  {{- if $np.app.policyTypes }}
+    {{- toYaml $np.app.policyTypes | nindent 4 }}
   {{- else }}
-    {{- if .Values.networkPolicy.ingress }}
+    {{- if $np.app.ingress }}
     - Ingress
     {{- end }}
-    {{- if .Values.networkPolicy.egress }}
+    {{- if $np.app.egress }}
     - Egress
     {{- end }}
   {{- end }}
-  {{- with .Values.networkPolicy.ingress }}
+  {{- with $np.app.ingress }}
   ingress:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .Values.networkPolicy.egress }}
+  {{- with $np.app.egress }}
   egress:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+{{- end }}
+{{- if .Values.front.enabled }}
+
+---
+# ===== Front component policy =====
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "rmt.fullname" . }}-{{ $frontComponent }}-nw-policy
+  labels:
+    {{- include "rmt.labels" . | nindent 4 }}
+    component: {{ $frontComponent }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "rmt.selectorLabels" . | nindent 6 }}
+      component: {{ $frontComponent }}
+{{- if $np.front.defaultRules }}
+  # ---- default rules ----
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # nginx web interface
+    - ports:
+        - {port: {{ .Values.front.service.port }}, protocol: TCP}
+  egress:
+    # DNS resolution in the dnsNamespace
+    - ports:
+        - {port: 53, protocol: UDP}
+        - {port: 53, protocol: TCP}
+      to:
+        {{- if $np.dnsCIDR }}
+        - ipBlock:
+            cidr: {{ $np.dnsCIDR }}
+        {{- end }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $np.dnsNamespace }}
+    # Reverse-proxy upstream: front -> app on 4224
+    - ports:
+        - {port: {{ .Values.app.service.port }}, protocol: TCP}
+      to:
+        - podSelector:
+            matchLabels:
+              {{- include "rmt.selectorLabels" . | nindent 14 }}
+              component: {{ $appComponent }}
+    # DB egress: front -> MariaDB on 3306
+    - ports:
+        - {port: 3306, protocol: TCP}
+      to:
+        - podSelector:
+            matchLabels:
+              {{- include "rmt.selectorLabels" . | nindent 14 }}
+              component: {{ $dbComponent }}
+{{- else }}
+  # ---- user-supplied rules ----
+  policyTypes:
+  {{- if $np.front.policyTypes }}
+    {{- toYaml $np.front.policyTypes | nindent 4 }}
+  {{- else }}
+    {{- if $np.front.ingress }}
+    - Ingress
+    {{- end }}
+    {{- if $np.front.egress }}
+    - Egress
+    {{- end }}
+  {{- end }}
+  {{- with $np.front.ingress }}
+  ingress:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $np.front.egress }}
+  egress:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
 {{- end }}
 {{- end }}

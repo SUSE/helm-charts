@@ -81,7 +81,7 @@ app:
 
 front:
   # -- Enable or disable the front nginx container
-  enabled: true
+  enabled: false
   init:
     image:
       repository: registry.suse.com/bci/bci-micro
@@ -139,41 +139,57 @@ secrets:
   existingAppSecret: ""
 
 networkPolicy:
-  # -- Enable or disable the NetworkPolicy resource
+  # -- Enable or disable the NetworkPolicy resources
   # -- Ref: https://kubernetes.io/docs/concepts/services-networking/network-policies/
   enabled: false
 
-  # -- When true, the chart generates a sensible default policy for RMT
-  #    (ingress 4224 open, 3306 from app/cronjob pods; egress DNS, 3306, and
-  #    443/80 to SCC/mirror). Set to false to supply your own rules via the
-  #    ingress/egress fields below.
-  defaultRules: true
+  # -- Shared settings used by the generated per-component default rules.
+  # -- Namespace where CoreDNS / kube-dns runs (used by default DNS egress rules).
   dnsNamespace: kube-system
-
-  # -- Optional cluster DNS service IP as an ipBlock CIDR.
-  #    Leave empty to rely on the kube-system namespaceSelector only.
-  dnsCIDR: "100.104.64.10/32"
-
-  # -- Egress CIDR for SCC and SUSE mirror servers (scc.suse.com / updates.suse.com) on ports 443/80.
-  # Used when defaultRules is true.
+  # -- Cluster DNS service IP as an ipBlock CIDR.
+  dnsCIDR: ""
+  # -- Egress CIDR for SCC and SUSE mirror servers, used by the app default rules.
   externalEgressCIDR: "0.0.0.0/0"
 
-  # -- Custom ingress/egress rules. Only used when defaultRules is false.
-  #    These follow the Kubernetes NetworkPolicy spec verbatim.
-  #    NOTE: listing a direction with no matching rules = deny-all for that direction.
-  policyTypes: []
-  ingress: []
-  egress: []
-  # -- policyTypes: leave empty [] to auto-derive from which of ingress/egress
-  #    you define below. Set explicitly (e.g. [Ingress] or [Ingress, Egress])
-  #    to force enforcement of specific directions.
+  # -- Per-component NetworkPolicies (db / app / front). Each component is independent:
+  #    * defaultRules: true  -> the chart generates that component's default policy.
+  #    * defaultRules: false -> that component's policy uses the custom
+  #                            policyTypes / ingress / egress fields below.
+  #    You can keep defaults for some components while customizing others.
   #
-  # -- ingress/egress examples:
-  #    ingress:
-  #      - ports:
-  #          - {port: 4224, protocol: TCP}
-  #    egress:
-  #      - ports:
-  #          - {port: 53, protocol: UDP}
-  #          - {port: 53, protocol: TCP}
+  #    policyTypes: leave [] to auto-derive from whichever of ingress/egress you set.
+  #    Set explicitly (e.g. [Ingress] or [Ingress, Egress]) to force directions.
+  #
+  #    ingress/egress example (when defaultRules: false):
+  #      ingress:
+  #        - ports:
+  #            - {port: 4224, protocol: TCP}
+  #      egress:
+  #        - ports:
+  #            - {port: 53, protocol: UDP}
+  #            - {port: 53, protocol: TCP}
+
+  # -- DB (MariaDB) policy. Default: accept 3306 only from app/cronjob pods; no egress.
+  db:
+    defaultRules: true
+    policyTypes: []
+    ingress: []
+    egress: []
+
+  # -- App (RMT server + sync/mirror cronjobs) policy. Default: serve 4224;
+  #    egress to DNS, DB (3306), and SCC/mirror (443/80).
+  app:
+    defaultRules: true
+    policyTypes: []
+    ingress: []
+    egress: []
+
+  # -- Front (nginx) policy. Only rendered when front.enabled is true.
+  #    Default: serve 80; egress to DNS, app (4224), and DB (3306).
+  front:
+    defaultRules: true
+    policyTypes: []
+    ingress: []
+    egress: []
+
 
