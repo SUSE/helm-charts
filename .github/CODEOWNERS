@@ -1,0 +1,6 @@
+# default reviewers set by directory
+# kiosk owned by bci team
+# rmt-helm owned by registration-telemetry
+/kiosk/ @dirkmueller @alexandrevicenzi
+/rmt-helm/ @ngetahun @rtamalin
+
