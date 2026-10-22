@@ -60,3 +60,31 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Name of the Secret holding the database credentials.
+Only honors secrets.existingDbSecret when the Secret is managed externally
+(secrets.create=false). When the chart creates the Secret it always uses
+the default "<fullname>-db".
+*/}}
+{{- define "rmt.dbSecretName" -}}
+{{- if .Values.secrets.create -}}
+{{- printf "%s-db" (include "rmt.fullname" .) -}}
+{{- else -}}
+{{- default (printf "%s-db" (include "rmt.fullname" .)) .Values.secrets.existingDbSecret -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Name of the Secret holding the SCC (app) credentials.
+Only honors secrets.existingAppSecret when the Secret is managed externally
+(secrets.create=false). When the chart creates the Secret it always uses
+the default "<fullname>-app".
+*/}}
+{{- define "rmt.appSecretName" -}}
+{{- if .Values.secrets.create -}}
+{{- printf "%s-app" (include "rmt.fullname" .) -}}
+{{- else -}}
+{{- default (printf "%s-app" (include "rmt.fullname" .)) .Values.secrets.existingAppSecret -}}
+{{- end -}}
+{{- end }}
