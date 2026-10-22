@@ -154,17 +154,20 @@ When `secrets.create` is `false`:
 
 ## Network Policy
 
-By default (`networkPolicy.enabled: false`) the chart does not create a NetworkPolicy resource.
+By default (`networkPolicy.enabled: false`) the chart does not create any NetworkPolicy resources.
 Set `networkPolicy.enabled: true` to enforce network traffic rules on the RMT pods.
 
-When `networkPolicy.enabled: true`, setting `networkPolicy.defaultRules: true` (the default)
-makes the chart generate a default ready-to-use policy.
+When enabled, the chart creates one independent NetworkPolicy per component:
 
-To supply your own rules instead (requires `networkPolicy.enabled: true`), set
-`networkPolicy.defaultRules: false` and provide `networkPolicy.ingress` and/or
-`networkPolicy.egress` following the Kubernetes
-[NetworkPolicy spec](https://kubernetes.io/docs/concepts/services-networking/network-policies/).
-Use `networkPolicy.policyTypes` to control which directions are enforced.
+| Policy | Governs | Default ingress | Default egress |
+|---|---|---|---|
+| `rmt-db-nw-policy` | MariaDB pod | port 3306 from `app` only | deny-all |
+| `rmt-app-nw-policy` | RMT server + sync/mirror cronjobs | port 4224 (open) | DNS, DB (3306→db pod), SCC/mirror (443/80) |
+| `rmt-front-nw-policy` | nginx pod (only when `front.enabled: true`) | port 80 (open) | DNS, app (4224→app pod), DB (3306→db pod) |
+
+Each component has its own `defaultRules` toggle. Set `defaultRules: false` on any component
+to supply custom `ingress`/`egress` rules for that component while keeping defaults for the others.
+Refer to `values.yaml` for the full list of available options.
 
 ## Deploying
 
