@@ -34,7 +34,7 @@ spec:
   # No egress: MariaDB initiates no outbound connections. Egress in policyTypes
   # with no rules = deny-all egress.
 {{- else }}
-  # ---- user-supplied rules ----
+  # ---- custom rules ----
   policyTypes:
   {{- if $np.db.policyTypes }}
     {{- toYaml $np.db.policyTypes | nindent 4 }}
@@ -108,7 +108,7 @@ spec:
         - ipBlock:
             cidr: {{ $np.externalEgressCIDR }}
 {{- else }}
-  # ---- user-supplied rules ----
+  # ---- custom rules ----
   policyTypes:
   {{- if $np.app.policyTypes }}
     {{- toYaml $np.app.policyTypes | nindent 4 }}
@@ -184,7 +184,7 @@ spec:
               {{- include "rmt.selectorLabels" . | nindent 14 }}
               component: {{ $dbComponent }}
 {{- else }}
-  # ---- user-supplied rules ----
+  # ---- custom rules ----
   policyTypes:
   {{- if $np.front.policyTypes }}
     {{- toYaml $np.front.policyTypes | nindent 4 }}
