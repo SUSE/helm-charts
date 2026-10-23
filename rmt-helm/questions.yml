@@ -215,6 +215,7 @@ questions:
     type: string
 
 
+
 # Misc Configuration
 
 - variable: app.env.http_proxy
@@ -375,3 +376,62 @@ questions:
   required: false
   type: string
   group: "Misc"
+
+# Network Policy Configuration
+
+- variable: networkPolicy.enabled
+  default: false
+  description: "Enable or disable all NetworkPolicy resources"
+  label: "NetworkPolicy Enabled"
+  required: false
+  type: boolean
+  group: "Network Policy"
+
+- variable: networkPolicy.dnsNamespace
+  default: "kube-system"
+  description: "Namespace where CoreDNS / kube-dns runs (used by DNS egress rules)"
+  label: "DNS Namespace"
+  required: false
+  type: string
+  group: "Network Policy"
+
+- variable: networkPolicy.dnsCIDR
+  default: ""
+  description: "Cluster DNS service IP as an ipBlock CIDR (e.g. 100.96.0.10/32). Leave empty to rely on dnsNamespace only"
+  label: "DNS Service CIDR"
+  required: false
+  type: string
+  group: "Network Policy"
+
+- variable: networkPolicy.externalEgressCIDR
+  default: "0.0.0.0/0"
+  description: "Egress CIDR for SCC and SUSE mirror servers. Narrow to your proxy CIDR if required"
+  label: "External Egress CIDR"
+  required: false
+  type: string
+  group: "Network Policy"
+
+- variable: networkPolicy.db.defaultRules
+  default: true
+  description: "Use default DB policy. Set false to supply custom ingress/egress rules"
+  label: "DB Default Rules"
+  required: false
+  type: boolean
+  group: "Network Policy"
+
+- variable: networkPolicy.app.defaultRules
+  default: true
+  description: "Use default app policy. Set false to supply custom ingress/egress rules"
+  label: "App Default Rules"
+  required: false
+  type: boolean
+  group: "Network Policy"
+
+- variable: networkPolicy.front.defaultRules
+  default: true
+  description: "Use default front policy. Only applies when front.enabled is true. Set false to supply custom ingress/egress rules"
+  label: "Front Default Rules"
+  required: false
+  type: boolean
+  group: "Network Policy"
+
