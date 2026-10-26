@@ -74,7 +74,7 @@ app:
   cronjob:
     sync:
       # -- schedule for running rmt-cli sync command (syncing data from SCC)
-      schedule: "* 1 * * *"
+      schedule: "1 1 * * *"
     mirror:
       # -- schedule for running rmt-cli mirror command (actual package mirroring)
       schedule: "30 2 * * *"
