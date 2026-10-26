@@ -1,10 +1,11 @@
 ---
 {{- if not .Values.db.storage.existingClaim }}
-{{- $component := "db" -}}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "rmt.fullname" . }}-{{ $component }}
+  name: {{ include "rmt.db.pvcName" . }}
+  annotations:
+    "helm.sh/resource-policy": keep
 spec:
   accessModes:
     - ReadWriteOnce
