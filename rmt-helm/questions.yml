@@ -285,7 +285,7 @@ questions:
   type: string
   group: "Misc"
 - variable: app.image.tag
-  default: ""
+  default: "3.2"
   description: "RMT Server Image Tag"
   label: "RMT Server Image Tag"
   required: false
