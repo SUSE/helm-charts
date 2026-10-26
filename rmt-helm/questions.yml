@@ -17,7 +17,7 @@ questions:
   type: string
   group: "SUSE Customer Center"
 - variable: app.scc.host
-  default: https://scc.suse.com
+  default: https://scc.suse.com/connect
   description: "SCC Host address"
   label: "SCC Host"
   required: true
@@ -40,7 +40,7 @@ questions:
   type: storageclass
   group: "RMT"
 - variable: app.storage.size
-  default: "30Gi"
+  default: "300Mi"
   description: "RMT Storage Volume - This will hold all Packages"
   label: "RMT Server Storage Volume"
   required: false
@@ -86,7 +86,7 @@ questions:
   group: "Database"
   subquestions:
   - variable: db.autoscaling.maxReplicas
-    default: "10"
+    default: "100"
     description: "DB Max Replicas"
     label: "DB Max Replicas"
     required: false
@@ -159,7 +159,7 @@ questions:
   type: storageclass
   group: "Database"
 - variable: db.storage.size
-  default: "10Gi"
+  default: "100Mi"
   description: "DB Storage Volume"
   label: "DB Storage Volume"
   required: false
@@ -306,7 +306,7 @@ questions:
   type: string
   group: "Misc"
 - variable: app.init.image.tag
-  default: "10.6"
+  default: "11.8"
   description: "Init Image Pull Tag"
   label: "Init Image Pull Policy Tag"
   required: false
@@ -327,7 +327,7 @@ questions:
   type: string
   group: "Misc"
 - variable: db.image.tag
-  default: "10.5"
+  default: "11.8"
   description: "Image Tag"
   label: "Image Tag"
   required: false
@@ -348,7 +348,7 @@ questions:
   type: string
   group: "Misc"
 - variable: front.image.tag
-  default: "1.21"
+  default: "1.27"
   description: "Front RMT Nginx Tag"
   label: "Front RMT Nginx Tag"
   required: false
