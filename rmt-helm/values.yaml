@@ -87,7 +87,7 @@ front:
       repository: registry.suse.com/bci/bci-micro
       pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "15.7"
+      tag: "16.1"
   image:
     # -- Nginx image
     repository: registry.suse.com/suse/nginx

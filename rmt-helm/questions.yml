@@ -369,7 +369,7 @@ questions:
   type: string
   group: "Misc"
 - variable: front.init.image.tag
-  default: "15.4"
+  default: "16.1"
   description: "RMT Image Tag"
   label: "RMT Image Tag"
   required: false
