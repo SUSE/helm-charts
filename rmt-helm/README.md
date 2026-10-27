@@ -114,8 +114,8 @@ The required values in the custom value file are as follows:
 ## Secret names and external Secret management
 
 By default (`secrets.create: true`) this chart renders two Kubernetes Secrets.
-Their names come from `{{ include "rmt.fullname" . }}` (defined in
-`templates/_helpers.tpl`), suffixed with `-db` and `-app`:
+Their names are derived from `define "rmt.fullname"` (defined in `templates/_helpers.tpl`),
+suffixed with `-db` and `-app`:
 
 - `<fullname>-db` — keys: `password`, `rootPassword` (MariaDB credentials)
 - `<fullname>-app` — keys: `username`, `password` (SCC credentials)
