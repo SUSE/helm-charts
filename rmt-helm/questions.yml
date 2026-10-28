@@ -375,3 +375,21 @@ questions:
   required: false
   type: string
   group: "Misc"
+
+# Storage
+
+- variable: db.storage.existingClaim
+  default: ""
+  description: "Name of an existing PVC to mount for the database. Leave empty to have the chart create one."
+  label: "Existing DB PVC name"
+  required: false
+  type: string
+  group: "Storage"
+- variable: app.storage.existingClaim
+  default: ""
+  description: "Name of an existing PVC to mount for RMT data. Leave empty to have the chart create one."
+  label: "Existing App PVC name"
+  required: false
+  type: string
+  group: "Storage"
+
