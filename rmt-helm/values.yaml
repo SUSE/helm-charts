@@ -45,7 +45,7 @@ app:
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     # -- RMT server image tag
-    tag: "3.1"
+    tag: "3.2"
   mysql:
     # -- mysql host to connect to (default target is db container)
     host:
@@ -74,7 +74,7 @@ app:
   cronjob:
     sync:
       # -- schedule for running rmt-cli sync command (syncing data from SCC)
-      schedule: "* 1 * * *"
+      schedule: "1 1 * * *"
     mirror:
       # -- schedule for running rmt-cli mirror command (actual package mirroring)
       schedule: "30 2 * * *"
@@ -87,7 +87,7 @@ front:
       repository: registry.suse.com/bci/bci-micro
       pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "15.7"
+      tag: "16.1"
   image:
     # -- Nginx image
     repository: registry.suse.com/suse/nginx
