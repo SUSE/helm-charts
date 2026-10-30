@@ -81,7 +81,7 @@ app:
 
 front:
   # -- Enable or disable the front nginx container
-  enabled: false
+  enabled: true
   init:
     image:
       repository: registry.suse.com/bci/bci-micro
