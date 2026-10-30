@@ -41,6 +41,8 @@ spec:
               name: udev-data
             - mountPath: /dev/input
               name: dev-input
+            - mountPath: /dev/dri
+              name: dev-dri
             {{- with .Values.X11.keyboardModMap }}
             - mountPath: /root/.Xmodmap
               subPath: .Xmodmap
@@ -229,6 +231,10 @@ spec:
         - name: dev-input
           hostPath:
             path: /dev/input
+            type: Directory
+        - name: dev-dri
+          hostPath:
+            path: /dev/dri
             type: Directory
         {{- with .Values.X11.customKeyboardLayout }}
         - name: xkb-config
