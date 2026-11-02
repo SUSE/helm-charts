@@ -1,12 +1,15 @@
 ---
-{{- $component := "app" -}}
+{{- if not .Values.app.storage.existingClaim }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "rmt.fullname" . }}-{{ $component }}
+  name: {{ include "rmt.app.pvcName" . }}
+  annotations:
+    "helm.sh/resource-policy": keep
 spec:
   accessModes: {{- toYaml .Values.app.storage.accessModes | nindent 4 }}
   storageClassName: {{ .Values.app.storage.class }}
   resources:
     requests:
       storage: {{ .Values.app.storage.size }}
+{{- end }}
