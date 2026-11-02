@@ -16,6 +16,11 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            {{- include "rmt.selectorLabels" . | nindent 12 }}
+            component: {{ $component }}
+            task: {{ $task }}
         spec:
           restartPolicy: OnFailure
           containers:
@@ -85,6 +90,11 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            {{- include "rmt.selectorLabels" . | nindent 12 }}
+            component: {{ $component }}
+            task: {{ $task }}
         spec:
           restartPolicy: OnFailure
           containers:

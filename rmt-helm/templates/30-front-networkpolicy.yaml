@@ -1,0 +1,79 @@
+{{- if and .Values.networkPolicy.enabled .Values.front.enabled }}
+{{- $appComponent := "app" -}}
+{{- $dbComponent := "db" -}}
+{{- $frontComponent := "front" -}}
+{{- $np := .Values.networkPolicy -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "rmt.fullname" . }}-{{ $frontComponent }}-nw-policy
+  labels:
+    {{- include "rmt.labels" . | nindent 4 }}
+    component: {{ $frontComponent }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "rmt.selectorLabels" . | nindent 6 }}
+      component: {{ $frontComponent }}
+{{- if $np.front.defaultRules }}
+  # ---- default rules ----
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # nginx web interface
+    - ports:
+        - {port: {{ .Values.front.service.port }}, protocol: TCP}
+  egress:
+    # DNS resolution in the dnsNamespace
+    - ports:
+        - {port: 53, protocol: UDP}
+        - {port: 53, protocol: TCP}
+      to:
+        {{- if $np.dnsCIDR }}
+        - ipBlock:
+            cidr: {{ $np.dnsCIDR }}
+        {{- end }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $np.dnsNamespace }}
+    # Reverse-proxy upstream: front -> app on 4224
+    - ports:
+        - {port: {{ .Values.app.service.port }}, protocol: TCP}
+      to:
+        - podSelector:
+            matchLabels:
+              {{- include "rmt.selectorLabels" . | nindent 14 }}
+              component: {{ $appComponent }}
+    # DB egress: front -> MariaDB on 3306
+    - ports:
+        - {port: 3306, protocol: TCP}
+      to:
+        - podSelector:
+            matchLabels:
+              {{- include "rmt.selectorLabels" . | nindent 14 }}
+              component: {{ $dbComponent }}
+{{- else }}
+  # ---- custom rules ----
+  policyTypes:
+  {{- if $np.front.policyTypes }}
+    {{- toYaml $np.front.policyTypes | nindent 4 }}
+  {{- else }}
+    {{- if $np.front.ingress }}
+    - Ingress
+    {{- end }}
+    {{- if $np.front.egress }}
+    - Egress
+    {{- end }}
+  {{- end }}
+  {{- with $np.front.ingress }}
+  ingress:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $np.front.egress }}
+  egress:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}
