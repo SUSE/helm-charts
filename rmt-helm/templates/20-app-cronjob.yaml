@@ -17,6 +17,9 @@ spec:
     spec:
       template:
         spec:
+          {{- with .Values.app.cronjob.priorityClassName }}
+          priorityClassName: {{ . }}
+          {{- end }}
           restartPolicy: OnFailure
           containers:
           - name: "{{ .Chart.Name }}-{{ $component }}-{{ $task }}"
@@ -86,6 +89,9 @@ spec:
     spec:
       template:
         spec:
+          {{- with .Values.app.cronjob.priorityClassName }}
+          priorityClassName: {{ . }}
+          {{- end }}
           restartPolicy: OnFailure
           containers:
           - name: "{{ .Chart.Name }}-{{ $component }}-{{ $task }}"

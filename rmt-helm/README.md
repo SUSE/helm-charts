@@ -111,6 +111,7 @@ The required values in the custom value file are as follows:
 - `ingress.tls[0].hosts[0]` DNS name at which the RMT service is be accessible from clients.
 - `ingress.tls[0].secretName` TLS ingress certificate.
 
+
 ## Secret names and external Secret management
 
 By default (`secrets.create: true`) this chart renders two Kubernetes Secrets.
@@ -151,6 +152,21 @@ When `secrets.create` is `false`:
   |---|---|
   | `existingDbSecret` (default `<fullname>-db`) | `password`, `rootPassword` |
   | `existingAppSecret` (default `<fullname>-app`) | `username`, `password` |
+
+
+## Pod priority (`priorityClassName`)
+
+Each workload can be assigned a Kubernetes
+[PriorityClass](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
+to influence scheduling and preemption order. These default to `""` (unset),
+so no `priorityClassName` is added unless you provide one. The referenced
+PriorityClass must already exist in the cluster — this chart does not create
+any PriorityClass resources.
+
+- `db.priorityClassName` PriorityClass for the MariaDB pod.
+- `app.priorityClassName` PriorityClass for the RMT server pod.
+- `front.priorityClassName` PriorityClass for the NGINX front pod.
+- `app.cronjob.priorityClassName` PriorityClass for the sync and mirror CronJob pods.
 
 
 ## Deploying
