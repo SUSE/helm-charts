@@ -111,7 +111,6 @@ The required values in the custom value file are as follows:
 - `ingress.tls[0].hosts[0]` DNS name at which the RMT service is be accessible from clients.
 - `ingress.tls[0].secretName` TLS ingress certificate.
 
-
 ## Secret names and external Secret management
 
 By default (`secrets.create: true`) this chart renders two Kubernetes Secrets.
@@ -167,7 +166,6 @@ any PriorityClass resources.
 - `app.priorityClassName` PriorityClass for the RMT server pod.
 - `front.priorityClassName` PriorityClass for the NGINX front pod.
 - `app.cronjob.priorityClassName` PriorityClass for the sync and mirror CronJob pods.
-
 
 ## Deploying
 
