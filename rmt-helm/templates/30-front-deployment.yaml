@@ -31,6 +31,9 @@ spec:
         {{- include "rmt.selectorLabels" . | nindent 8 }}
         component: {{ $component }}
     spec:
+      {{- with .Values.front.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

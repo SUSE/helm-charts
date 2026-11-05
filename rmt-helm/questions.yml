@@ -165,6 +165,13 @@ questions:
   required: false
   type: string
   group: "Database"
+- variable: db.priorityClassName
+  default: ""
+  description: "PriorityClass name for the DB pod (must already exist in the cluster)"
+  label: "DB PriorityClass Name"
+  required: false
+  type: string
+  group: "Database"
 
 # Ingress Configuration
 
@@ -246,6 +253,27 @@ questions:
   default: "1 1 * * *"
   description: "Schedule for running rmt-cli sync command (syncing to SUSE db)"
   label: "Cron rmt-cli Sync Scheduling"
+  required: false
+  type: string
+  group: "Misc"
+- variable: app.priorityClassName
+  default: ""
+  description: "PriorityClass name for the app (RMT server) pod (must already exist in the cluster)"
+  label: "App PriorityClass Name"
+  required: false
+  type: string
+  group: "Misc"
+- variable: front.priorityClassName
+  default: ""
+  description: "PriorityClass name for the front (nginx) pod (must already exist in the cluster)"
+  label: "Front PriorityClass Name"
+  required: false
+  type: string
+  group: "Misc"
+- variable: app.cronjob.priorityClassName
+  default: ""
+  description: "PriorityClass name for the sync/mirror cronjob pods (must already exist in the cluster)"
+  label: "Cronjob PriorityClass Name"
   required: false
   type: string
   group: "Misc"
