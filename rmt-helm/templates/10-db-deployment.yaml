@@ -29,7 +29,7 @@ spec:
         component: {{ $component }}
     spec:
       {{- with .Values.db.priorityClassName }}
-      priorityClassName: {{ . }}
+      priorityClassName: {{ . | quote }}
       {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

@@ -18,7 +18,7 @@ spec:
       template:
         spec:
           {{- with .Values.app.cronjob.priorityClassName }}
-          priorityClassName: {{ .  | quote }}
+          priorityClassName: {{ . | quote }}
           {{- end }}
           restartPolicy: OnFailure
           containers:
@@ -90,7 +90,7 @@ spec:
       template:
         spec:
           {{- with .Values.app.cronjob.priorityClassName }}
-          priorityClassName: {{ . }}
+          priorityClassName: {{ . | quote }}
           {{- end }}
           restartPolicy: OnFailure
           containers:

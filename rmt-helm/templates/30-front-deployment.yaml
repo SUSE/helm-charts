@@ -32,7 +32,7 @@ spec:
         component: {{ $component }}
     spec:
       {{- with .Values.front.priorityClassName }}
-      priorityClassName: {{ . }}
+      priorityClassName: {{ . | quote }}
       {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
