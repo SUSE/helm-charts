@@ -1,9 +1,11 @@
 ---
-{{- if not .Values.app.storage.existingClaim }}
+{{- $defaultName := printf "%s-app" (include "rmt.fullname" .) }}
+{{- $claim := .Values.app.storage.existingClaim }}
+{{- if or (not $claim) (eq $claim $defaultName) }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "rmt.app.pvcName" . }}
+  name: {{ $defaultName }}
   annotations:
     "helm.sh/resource-policy": keep
 spec:

@@ -154,19 +154,59 @@ When `secrets.create` is `false`:
 
 ## Using existing PersistentVolumeClaims
 
-By default, the chart creates two PVCs:
+By default, the chart creates and manages two PVCs:
 
-- `<release>-<chart>-db` — used by MariaDB
-- `<release>-<chart>-app` — used by the RMT server and its cronjobs
+- `<fullname>-db` — used by MariaDB
+- `<fullname>-app` — used by the RMT server and its cronjobs
 
-If you want to mount **pre-existing PVCs** (for example, PVCs bound to statically provisioned PVs, or PVCs managed by a parent/wrapper chart),set `db.storage.existingClaim` and/or `app.storage.existingClaim` to the name of the existing PVC. When set, the chart will **not** create that PVC and the deployments/cronjobs will mount the specified claim instead.
+Both PVCs are annotated with `helm.sh/resource-policy: keep`, which prevents
+Helm from deleting them during upgrades or uninstalls.
+
+### Mounting an external PVC
+
+To mount a **pre-existing PVC** that was created outside this chart (for example,
+a PVC bound to a statically provisioned PV, or one managed by a parent chart),
+set `db.storage.existingClaim` and/or `app.storage.existingClaim` to the name
+of that PVC. The chart will then skip creating its own PVC for that component
+and mount the specified claim instead.
+
+```yaml
+db:
+  storage:
+    existingClaim: <my-external-db-pvc>
+app:
+  storage:
+    existingClaim: <my-external-app-pvc>
+```
 
 Notes:
 
-- The referenced PVCs must already exist in the same namespace as the release.
-- When `existingClaim` is set for a component, its `storage.class`, `storage.size`, and (for `app`) `storage.accessModes` are ignored for that component — the existing PVC's own spec applies.
-- Leaving `existingClaim` empty (default) preserves the current behavior — the chart creates and manages the PVC itself.
-- `db.storage.existingClaim` and `app.storage.existingClaim` are independent: you can override one while letting the chart create the other.
+- The referenced PVCs must already exist in the same namespace before install.
+- When `existingClaim` is set to an external name, its `storage.class`,
+  `storage.size`, and (for `app`) `storage.accessModes` values are ignored —
+  the existing PVC's own spec applies.
+- `db.storage.existingClaim` and `app.storage.existingClaim` are independent:
+  you can override one while letting the chart manage the other.
+
+### Upgrading an existing release
+The session applys to the scenario that: the live release in K8s cluster using PVCs managed by this helm chart, then need an upgrade.
+
+**No action is needed for a standard upgrade.** Leave `existingClaim` empty
+(the default) and both chart-managed PVCs are preserved
+
+> ⚠️ If you need to switch a component to a *different*, external PVC after
+> the chart has already created one, manually protect the chart-managed PVC
+> before upgrading, otherwise Helm will delete it:
+> ```sh
+> kubectl annotate pvc <fullname>-db <fullname>-app helm.sh/resource-policy=keep -n <namespace name>
+> ```
+> Then set `existingClaim` to the new PVC name and proceed with the upgrade.
+
+> ⚠️ If you set `existingClaim` to the same name as the default PVC created by
+> the chart, such as `<fullname>-app`, `helm upgrade` use the chart's own PVC, instead of PVC that has the same name
+> but was created outside of this Helm chart. In this case, the `storage.class`
+> and `storage.size` values you supply **must match the already-deployed PVC**,
+> because `storageClassName` is immutable in a PVC's spec, as is the storage size.
 
 ## Deploying
 
