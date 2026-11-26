@@ -1,0 +1,56 @@
+{{- if .Values.networkPolicy.enabled }}
+{{- $appComponent := "app" -}}
+{{- $dbComponent := "db" -}}
+{{- $np := .Values.networkPolicy -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "rmt.fullname" . }}-{{ $dbComponent }}-nw-policy
+  labels:
+    {{- include "rmt.labels" . | nindent 4 }}
+    component: {{ $dbComponent }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "rmt.selectorLabels" . | nindent 6 }}
+      component: {{ $dbComponent }}
+{{- if $np.db.defaultRules }}
+  # ---- default rules ----
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # MariaDB 3306 - only from the RMT app + sync/mirror cronjob pods
+    - from:
+        - podSelector:
+            matchLabels:
+              {{- include "rmt.selectorLabels" . | nindent 14 }}
+              component: {{ $appComponent }}
+      ports:
+        - {port: 3306, protocol: TCP}
+  # No egress: MariaDB initiates no outbound connections. Egress in policyTypes
+  # with no rules = deny-all egress.
+{{- else }}
+  # ---- custom rules ----
+  policyTypes:
+  {{- if $np.db.policyTypes }}
+    {{- toYaml $np.db.policyTypes | nindent 4 }}
+  {{- else }}
+    {{- if $np.db.ingress }}
+    - Ingress
+    {{- end }}
+    {{- if $np.db.egress }}
+    - Egress
+    {{- end }}
+  {{- end }}
+  {{- with $np.db.ingress }}
+  ingress:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $np.db.egress }}
+  egress:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,78 @@
+{{- if .Values.networkPolicy.enabled }}
+{{- $appComponent := "app" -}}
+{{- $dbComponent := "db" -}}
+{{- $np := .Values.networkPolicy -}}
+---
+# App component policy (also governs sync/mirror cronjobs: same component=app)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "rmt.fullname" . }}-{{ $appComponent }}-nw-policy
+  labels:
+    {{- include "rmt.labels" . | nindent 4 }}
+    component: {{ $appComponent }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "rmt.selectorLabels" . | nindent 6 }}
+      component: {{ $appComponent }}
+{{- if $np.app.defaultRules }}
+  # ---- default rules ----
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # RMT web server
+    - ports:
+        - {port: {{ .Values.app.service.port }}, protocol: TCP}
+  egress:
+    # DNS resolution in the dnsNamespace
+    - ports:
+        - {port: 53, protocol: UDP}
+        - {port: 53, protocol: TCP}
+      to:
+        {{- if $np.dnsCIDR }}
+        - ipBlock:
+            cidr: {{ $np.dnsCIDR }}
+        {{- end }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $np.dnsNamespace }}
+    # DB egress
+    - ports:
+        - {port: 3306, protocol: TCP}
+      to:
+        - podSelector:
+            matchLabels:
+              {{- include "rmt.selectorLabels" . | nindent 14 }}
+              component: {{ $dbComponent }}
+    # SCC + SUSE mirror/update servers
+    - ports:
+        - {port: 443, protocol: TCP}
+        - {port: 80, protocol: TCP}
+      to:
+        - ipBlock:
+            cidr: {{ $np.externalEgressCIDR }}
+{{- else }}
+  # ---- custom rules ----
+  policyTypes:
+  {{- if $np.app.policyTypes }}
+    {{- toYaml $np.app.policyTypes | nindent 4 }}
+  {{- else }}
+    {{- if $np.app.ingress }}
+    - Ingress
+    {{- end }}
+    {{- if $np.app.egress }}
+    - Egress
+    {{- end }}
+  {{- end }}
+  {{- with $np.app.ingress }}
+  ingress:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $np.app.egress }}
+  egress:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}
