@@ -160,7 +160,8 @@ By default, the chart creates and manages two PVCs:
 - `<fullname>-app` — used by the RMT server and its cronjobs
 
 Both PVCs are annotated with `helm.sh/resource-policy: keep`, which prevents
-Helm from deleting them during upgrades or uninstalls.
+Helm from deleting them during upgrades or on `helm uninstall`. See
+[Uninstalling](#uninstalling) for how to remove them manually.
 
 ### Mounting an external PVC
 
@@ -187,26 +188,34 @@ Notes:
   the existing PVC's own spec applies.
 - `db.storage.existingClaim` and `app.storage.existingClaim` are independent:
   you can override one while letting the chart manage the other.
+- Setting `existingClaim` to the chart's default PVC name (`<fullname>-db` or
+  `<fullname>-app`) behaves exactly like leaving it empty: the chart keeps
+  creating and managing that PVC. In that case the `storage.class` and
+  `storage.size` values **must match the already-deployed PVC**, because
+  `storageClassName` is immutable and a PVC's requested size cannot be reduced.
+  A PVC with that name that was created outside of Helm cannot be used this
+  way — Helm refuses to adopt it and `helm install` fails. Give external PVCs
+  a different name.
 
 ### Upgrading an existing release
-The session applys to the scenario that: the live release in K8s cluster using PVCs managed by this helm chart, then need an upgrade.
+
+This section applies when upgrading a release whose PVCs are managed by this
+chart.
 
 **No action is needed for a standard upgrade.** Leave `existingClaim` empty
-(the default) and both chart-managed PVCs are preserved
+(the default) and both chart-managed PVCs are preserved.
 
-> ⚠️ If you need to switch a component to a *different*, external PVC after
-> the chart has already created one, manually protect the chart-managed PVC
-> before upgrading, otherwise Helm will delete it:
+> ⚠️ Releases installed with a chart version older than 1.1.3 created their
+> PVCs without the `helm.sh/resource-policy: keep` annotation. If you upgrade
+> such a release and set `existingClaim` to a *different*, external PVC in the
+> same step, Helm deletes the old chart-managed PVC together with its data.
+> Protect it manually before upgrading:
 > ```sh
-> kubectl annotate pvc <fullname>-db <fullname>-app helm.sh/resource-policy=keep -n <namespace name>
+> kubectl annotate pvc <fullname>-db <fullname>-app helm.sh/resource-policy=keep -n <namespace>
 > ```
 > Then set `existingClaim` to the new PVC name and proceed with the upgrade.
-
-> ⚠️ If you set `existingClaim` to the same name as the default PVC created by
-> the chart, such as `<fullname>-app`, `helm upgrade` use the chart's own PVC, instead of PVC that has the same name
-> but was created outside of this Helm chart. In this case, the `storage.class`
-> and `storage.size` values you supply **must match the already-deployed PVC**,
-> because `storageClassName` is immutable in a PVC's spec, as is the storage size.
+> Alternatively, first upgrade to this chart version without changing
+> `existingClaim` (which adds the annotation), then switch in a second upgrade.
 
 ## Pod priority (`priorityClassName`)
 
@@ -225,6 +234,35 @@ any PriorityClass resources.
 ## Deploying
 
 `helm install rmt ./helm -f myvalues.yaml`
+
+## Uninstalling
+
+```sh
+helm uninstall rmt -n <namespace>
+```
+
+The chart-managed PVCs (`<fullname>-db` holding the MariaDB database and
+`<fullname>-app` holding the mirrored RMT repository data) are annotated with
+`helm.sh/resource-policy: keep` and are **not** deleted by `helm uninstall`.
+This protects the potentially large and time-consuming-to-recreate mirror data
+from accidental removal. Reinstalling a release with the same name in the same
+namespace picks up the retained PVCs again.
+
+PVCs referenced through `existingClaim` are never managed by the chart and are
+likewise left untouched.
+
+To permanently remove the data, delete the PVCs manually after uninstalling:
+
+```sh
+kubectl get pvc -n <namespace>
+kubectl delete pvc <fullname>-db <fullname>-app -n <namespace>
+```
+
+> ⚠️ Deleting the PVCs irreversibly removes the RMT database and all mirrored
+> repository data. Whether the underlying PersistentVolume and its storage are
+> also released depends on the PV's `reclaimPolicy`; volumes with `Retain` must
+> be cleaned up separately (`kubectl delete pv <pv-name>` plus the backing
+> storage).
 
 ## Further info
 
