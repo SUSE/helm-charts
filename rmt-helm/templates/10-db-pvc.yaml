@@ -1,9 +1,13 @@
 ---
-{{- $component := "db" -}}
+{{- $defaultName := printf "%s-db" (include "rmt.fullname" .) }}
+{{- $claim := .Values.db.storage.existingClaim | toString }}
+{{- if or (not $claim) (eq $claim $defaultName) }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "rmt.fullname" . }}-{{ $component }}
+  name: {{ $defaultName }}
+  annotations:
+    "helm.sh/resource-policy": keep
 spec:
   accessModes:
     - ReadWriteOnce
@@ -11,3 +15,4 @@ spec:
   resources:
     requests:
       storage: {{ .Values.db.storage.size }}
+{{- end }}
