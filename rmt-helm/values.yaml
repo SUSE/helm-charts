@@ -5,6 +5,8 @@
 # Declare variables to be passed into your templates.
 
 db:
+  # The referenced PriorityClass must already exist in the cluster.
+  priorityClassName: ""
   image:
     # -- db image
     repository: registry.suse.com/suse/mariadb
@@ -35,6 +37,8 @@ db:
     targetCPUUtilizationPercentage: 80
 
 app:
+  # The referenced PriorityClass must already exist in the cluster.
+  priorityClassName: ""
   init:
     image:
       repository: registry.suse.com/suse/mariadb-client
@@ -76,6 +80,8 @@ app:
     https_proxy: ""
     no_proxy: ""
   cronjob:
+    # The referenced PriorityClass must already exist in the cluster.
+    priorityClassName: ""
     sync:
       # -- schedule for running rmt-cli sync command (syncing data from SCC)
       schedule: "1 1 * * *"
@@ -86,6 +92,8 @@ app:
 front:
   # -- Enable or disable the front nginx container
   enabled: true
+  # The referenced PriorityClass must already exist in the cluster.
+  priorityClassName: ""
   init:
     image:
       repository: registry.suse.com/bci/bci-micro
