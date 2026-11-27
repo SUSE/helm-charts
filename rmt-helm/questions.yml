@@ -153,11 +153,12 @@ questions:
   group: "Database"
 - variable: db.storage.class
   default: 
-  description: "DB StorageClass"
+  description: "DB StorageClass. Required when the chart creates the PVC (Existing DB PVC name empty or set to the release name)."
   label: "DB StorageClass"
   required: true
   type: storageclass
   group: "Database"
+  show_if: "db.storage.existingClaim="
 - variable: db.storage.size
   default: "100Mi"
   description: "DB Storage Volume"
@@ -408,14 +409,14 @@ questions:
 
 - variable: db.storage.existingClaim
   default: ""
-  description: "Name of an existing PVC to mount for the database. Leave empty to have the chart create one."
+  description: "Existing PVC to mount for the database. Leave empty (or set to the release name) to let the chart create one."
   label: "Existing DB PVC name"
   required: false
   type: string
   group: "Storage"
 - variable: app.storage.existingClaim
   default: ""
-  description: "Name of an existing PVC to mount for RMT data. Leave empty to have the chart create one."
+  description: "Existing PVC to mount for RMT data. Leave empty (or set to the release name) to let the chart create one."
   label: "Existing App PVC name"
   required: false
   type: string

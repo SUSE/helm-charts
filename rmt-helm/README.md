@@ -246,7 +246,16 @@ The chart-managed PVCs (`<fullname>-db` holding the MariaDB database and
 `helm.sh/resource-policy: keep` and are **not** deleted by `helm uninstall`.
 This protects the potentially large and time-consuming-to-recreate mirror data
 from accidental removal. Reinstalling a release with the same name in the same
-namespace picks up the retained PVCs again.
+namespace re-attaches the retained PVCs.
+
+> ⚠️ With the default `secrets.create: true`, `helm uninstall` deletes the
+> chart-managed Secrets even though the PVCs are kept. On reinstall the chart
+> generates new random database passwords unless you supply `db.mysql.password`
+> and `db.mysql.rootPassword` explicitly — and new passwords will not match the
+> credentials already stored in the retained MariaDB volume, so RMT cannot
+> connect. Save the existing `<fullname>-db` credentials before uninstalling and
+> re-supply them on reinstall, or manage the Secrets externally
+> (`secrets.create: false`).
 
 PVCs referenced through `existingClaim` are never managed by the chart and are
 likewise left untouched.
